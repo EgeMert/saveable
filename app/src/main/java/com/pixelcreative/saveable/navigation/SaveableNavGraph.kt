@@ -8,8 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.pixelcreative.saveable.presentation.expenses.ExpensesScreen
-import com.pixelcreative.saveable.presentation.splashscreen.SplashScreen
+import com.pixelcreative.saveable.screens.expenses.ExpensesScreen
+import com.pixelcreative.saveable.screens.splashscreen.SplashScreen
 
 @Composable
 fun SaveableNavGraph(

@@ -1,4 +1,4 @@
-package com.pixelcreative.saveable.presentation.expenses
+package com.pixelcreative.saveable.screens.expenses
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -1,4 +1,4 @@
-package com.pixelcreative.saveable.presentation.splashscreen
+package com.pixelcreative.saveable.screens.splashscreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,9 +11,15 @@ import com.pixelcreative.saveable.navigation.Router
 
 @Composable
 fun SplashScreen(router: Router) {
-    Box (modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-        Text(text = "Splash Screen", modifier = Modifier.clickable {
-            router.goToExpenseScreen()
-        })
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Splash Screen",
+            modifier = Modifier.clickable {
+                router.goToExpenseScreen()
+            }
+        )
     }
 }
