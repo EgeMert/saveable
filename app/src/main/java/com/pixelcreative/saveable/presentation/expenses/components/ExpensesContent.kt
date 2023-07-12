@@ -27,7 +27,6 @@ fun ExpensesContent(
     expenses: Expenses,
     deleteExpense: (expense: Expense) -> Unit,
     navigateToUpdateExpenseScreen: (expenseId: Long) -> Unit,
-    latestExpense: Expense
 ) {
     LazyColumn(
         modifier = Modifier
@@ -50,10 +49,7 @@ fun ExpensesContent(
                     fontSize = 24.sp,
                     textAlign = TextAlign.Start
                 )
-                LatestSavingCard(
-                    expense = latestExpense,
-                    navigateToDetailScreen = navigateToUpdateExpenseScreen
-                )
+
             }
         }
 
@@ -65,7 +61,7 @@ fun ExpensesContent(
                 deleteExpense = {
                     deleteExpense(expense)
                 },
-                navigateToUpdateExpenseScreen = navigateToUpdateExpenseScreen
+                navigateToUpdateExpenseScreen ={}
             )
         }
     }

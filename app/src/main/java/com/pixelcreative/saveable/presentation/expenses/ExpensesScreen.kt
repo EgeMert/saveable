@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.core.Constants
 import com.pixelcreative.saveable.domain.model.Expense
+import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.presentation.expenses.components.AddExpenseAlertDialog
 import com.pixelcreative.saveable.presentation.expenses.components.AddExpenseFloatingActionButton
 import com.pixelcreative.saveable.presentation.expenses.components.ExpensesContent
@@ -16,9 +17,9 @@ import com.pixelcreative.saveable.presentation.expenses.components.ExpensesTopBa
 @Composable
 @ExperimentalMaterialApi
 fun ExpensesScreen(
-    viewModel: ExpensesViewModel = hiltViewModel(),
-    navigateToUpdateExpenseScreen: (expenseId: Long) -> Unit
+  router: Router
 ) {
+    val viewModel: ExpensesViewModel = hiltViewModel()
     val expenses by viewModel.expenses.collectAsState(
         initial = emptyList()
     )
@@ -43,8 +44,7 @@ fun ExpensesScreen(
                 deleteExpense = { expense ->
                     viewModel.deleteExpense(expense)
                 },
-                navigateToUpdateExpenseScreen = navigateToUpdateExpenseScreen,
-                latestExpense = latestExpense
+                navigateToUpdateExpenseScreen = {}
             )
             AddExpenseAlertDialog(
                 openDialog = viewModel.openDialog,
