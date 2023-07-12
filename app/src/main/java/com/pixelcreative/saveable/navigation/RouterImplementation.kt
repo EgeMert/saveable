@@ -62,11 +62,15 @@ class RouterImplementation(
     }
 
     override fun goToSplashScreen() {
-
+        navigate(Screens.SplashScreen)
     }
 
     override fun goToHomeScreen() {
         navigate(Screens.Home)
+    }
+
+    override fun goToDetailScreen() {
+        navigate(Screens.DetailScreen)
     }
 
     override fun goToExpenseScreen() {

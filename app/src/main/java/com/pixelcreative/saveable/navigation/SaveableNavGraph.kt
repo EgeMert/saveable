@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.pixelcreative.saveable.screens.detail.DetailScreen
 import com.pixelcreative.saveable.screens.expenses.ExpensesScreen
 import com.pixelcreative.saveable.screens.splashscreen.SplashScreen
 
@@ -15,7 +16,7 @@ import com.pixelcreative.saveable.screens.splashscreen.SplashScreen
 fun SaveableNavGraph(
     navController: NavHostController,
     router: Router,
-    startDestination: String = Screens.Splash.route,
+    startDestination: String = Screens.SplashScreen.route,
     navGraphBuilder: NavGraphBuilder.() -> Unit = {},
 ) {
     NavHost(
@@ -33,7 +34,7 @@ private fun NavGraphBuilder.mainNavigation(
     router: Router
 ){
     composable(
-        route = Screens.Splash.route
+        route = Screens.SplashScreen.route
     ){
        SplashScreen(router = router)
     }
@@ -58,6 +59,11 @@ private fun NavGraphBuilder.mainNavigation(
         route = Screens.ExpenseScreen.route,
     ){
         ExpensesScreen(router = router )
+    }
+    composable(
+        route = Screens.DetailScreen.route,
+    ){
+        DetailScreen(router = router )
     }
 }
 
