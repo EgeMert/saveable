@@ -8,7 +8,7 @@ data class ExpenseDetailList(
 
 data class ExpenseDetail(
     val id: String? = LocalDate.now().toString(),
-    val price: Double,
-    val isIncome: Boolean,
-    val category: String
+    val price: Double?,
+    val isIncome: Boolean? = false,
+    val category: String?
 )

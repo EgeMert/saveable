@@ -6,5 +6,7 @@ interface Router {
    fun goToHomeScreen()
    fun goToDetailScreen()
    fun goToExpenseScreen()
+
+   fun goToAddExpenseScreen()
     fun goToMessageScreen(message: String)
 }

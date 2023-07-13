@@ -5,11 +5,9 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,7 +22,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                 selected = currentRoute == navItem.route,
                 modifier = Modifier.background(MaterialTheme.colors.background),
                 selectedContentColor = MaterialTheme.colors.onSecondary,
-                unselectedContentColor =MaterialTheme.colors.onPrimary,
+                unselectedContentColor = MaterialTheme.colors.onPrimary,
                 onClick = {
                     navController.navigate(navItem.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -37,12 +35,9 @@ fun BottomNavigationBar(navController: NavHostController) {
                 icon = {
                     Icon(
                         imageVector = navItem.image,
-                        contentDescription = navItem.title
+                        contentDescription = null
                     )
-                },
-                label = {
-                    Text(text = navItem.title)
-                },
+                }
             )
         }
     }

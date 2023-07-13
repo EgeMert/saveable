@@ -1,39 +1,40 @@
 package com.pixelcreative.saveable.navigation.bottomnavigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.pixelcreative.saveable.navigation.Screens
 
 object NavBarItems {
     val BarItems = listOf(
         BottomBarItem(
-            title = "Home",
             image = Icons.Filled.Home,
             route = Screens.ExpenseScreen.route
         ),
         BottomBarItem(
-            title = "Search",
-            image = Icons.Filled.Search,
+            image = Icons.Filled.DateRange,
             route = Screens.SplashScreen.route
         ),
         BottomBarItem(
-            title = "Notifications",
-            image = Icons.Filled.Notifications,
-            route = Screens.DetailScreen.route
+            image = Icons.Filled.Add,
+            route = Screens.AddExpenseScreen.route
         ),
         BottomBarItem(
-            title = "Messages",
-            image = Icons.Filled.Notifications,
+            image = Icons.Filled.List,
             route = Screens.Home.route
         ),
+        BottomBarItem(
+            image = Icons.Filled.MoreVert,
+            route = Screens.Home.route
+        )
     )
 }
 
 data class BottomBarItem(
-    val title: String,
     val image: ImageVector,
     val route: String,
     val isActive: Boolean = true
