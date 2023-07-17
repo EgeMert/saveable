@@ -26,7 +26,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.AutoComplete
-import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
@@ -45,11 +44,6 @@ fun AddExpenseScreen(
     val expensesViewModel: ExpensesViewModel = hiltViewModel()
     var expenseAmount by rememberSaveable { mutableStateOf("") }
     var selectedCategory by rememberSaveable { mutableStateOf("") }
-    val dailyAmount = 0.0
-
-    expensesViewModel.dailyExpense.expenseDetailList?.expenseDetail?.forEach { expenseDetail ->
-        dailyAmount.plus(expenseDetail.price.doubleOrZero())
-    }
 
     val latestExpense by expensesViewModel.latestExpense.collectAsState(
         initial = null
@@ -135,7 +129,7 @@ fun AddExpenseScreen(
                         } else {
                             expensesViewModel.updateExpenseList(
                                 expenseDetailList = ExpenseDetailList(
-                                    expenseDetail = listOf(
+                                    expenseDetail = latestExpense?.expenseDetailList?.expenseDetail?.plus(
                                         ExpenseDetail(
                                             price = expenseAmount.toDouble(),
                                             isIncome = false,
@@ -144,7 +138,8 @@ fun AddExpenseScreen(
                                     )
                                 ),
                                 date = getLocalDateAsString(),
-                                dailyTotalExpense = dailyAmount.plus(expenseAmount.toDouble())
+                                dailyTotalExpense =
+                                (latestExpense?.dailyTotalExpense?.toDouble())?.plus(expenseAmount.toDouble())
                                     .toString()
                             )
                         }

@@ -15,9 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.DailySummary
 import com.pixelcreative.saveable.components.SummaryCard
-import com.pixelcreative.saveable.domain.model.Expense
-import com.pixelcreative.saveable.domain.model.ExpenseDetail
-import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.ui.theme.Black
 import com.pixelcreative.saveable.ui.theme.White
@@ -56,25 +53,7 @@ fun ExpensesScreen(
 
         DailySummary(
             modifier = Modifier.padding(16.dp),
-            dailyExpense = Expense(
-                id = 0L,
-                date = "Date",
-                expenseDetailList = ExpenseDetailList(
-                    expenseDetail = listOf(
-                        ExpenseDetail(
-                            price = 350.0,
-                            isIncome = false,
-                            category = "Alışveriş"
-                        ),
-                        ExpenseDetail(
-                            price = 200.0,
-                            isIncome = false,
-                            category = "Giyim"
-                        )
-                    )
-                ),
-                dailyTotalExpense = "550.0 TL"
-            )
+            dailyExpense = latestExpense
         )
 
         Text(
