@@ -26,7 +26,6 @@ import com.pixelcreative.saveable.ui.theme.CharlestonGreen
 import com.pixelcreative.saveable.ui.theme.Emerald
 import com.pixelcreative.saveable.ui.theme.PhilippineGray
 import com.pixelcreative.saveable.ui.theme.White
-import java.time.LocalDate
 
 @Preview
 @Composable
@@ -38,13 +37,11 @@ fun SummaryCard_Preview() {
             expenseDetailList = ExpenseDetailList(
                 expenseDetail = listOf(
                     ExpenseDetail(
-                        id = LocalDate.now().toString(),
                         price = 350.0,
                         isIncome = false,
                         category = "Alışveriş"
                     ),
                     ExpenseDetail(
-                        id = LocalDate.now().toString(),
                         price = 200.0,
                         isIncome = false,
                         category = "Giyim"

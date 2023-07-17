@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.pixelcreative.saveable.core.Constants.Companion.EXPENSE_DETAIL_TABLE
 import com.pixelcreative.saveable.core.Constants.Companion.EXPENSE_TABLE
 import com.pixelcreative.saveable.domain.model.Expense
+import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.domain.repository.ExpenseDetails
 import com.pixelcreative.saveable.domain.repository.Expenses
 import kotlinx.coroutines.flow.Flow
@@ -27,16 +28,26 @@ interface ExpenseDao {
     @Update
     suspend fun updateExpense(expense: Expense)
 
+    @Query("UPDATE $EXPENSE_TABLE SET expenseDetailList=:expenseDetailList, dailyTotalExpense=:dailyTotalExpense WHERE date=:date")
+    suspend fun updateExpenseList(
+        expenseDetailList: ExpenseDetailList,
+        date: String,
+        dailyTotalExpense: String
+    ): Int
+
     @Delete
     suspend fun deleteExpense(expense: Expense)
 
     @Query("SELECT * FROM $EXPENSE_TABLE ORDER BY id DESC LIMIT 1")
     fun getLatestExpense(): Flow<Expense>
+
+    @Query("SELECT * FROM $EXPENSE_TABLE WHERE date = :date")
+    fun getDailyExpense(date: String): Expense
 }
 
 @Dao
 interface ExpenseDetailDao {
 
-    @Query("SELECT * FROM $EXPENSE_DETAIL_TABLE WHERE mainEntityId = :mainEntityId")
+    @Query("SELECT * FROM $EXPENSE_DETAIL_TABLE WHERE mainEntityId=:mainEntityId")
     fun getExpenseDetails(mainEntityId: Long): Flow<ExpenseDetails>
 }

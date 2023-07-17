@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
 import com.pixelcreative.saveable.domain.model.Expense
+import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.domain.repository.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,6 +34,27 @@ class ExpensesViewModel @Inject constructor(
 
     val expenses = repo.getExpensesFromRoom()
 
+    var dailyExpense by mutableStateOf(
+        Expense(
+            id = 0,
+            date = EMPTY_STRING,
+            expenseDetailList = null,
+            dailyTotalExpense = EMPTY_STRING
+        )
+    )
+
+    fun getDailyExpense(date: String) = viewModelScope.launch {
+        dailyExpense = repo.getDailyExpense(date)
+    }
+
+    fun updateExpenseList(
+        expenseDetailList: ExpenseDetailList,
+        date: String,
+        dailyTotalExpense: String
+    ) = viewModelScope.launch {
+        repo.updateExpenseList(expenseDetailList, date, dailyTotalExpense)
+    }
+
     fun getExpense(id: Long) = viewModelScope.launch {
         expense = repo.getExpenseFromRoom(id)
     }
@@ -53,19 +75,5 @@ class ExpensesViewModel @Inject constructor(
         expense = expense.copy(
             dailyTotalExpense = dailyTotalExpense
         )
-    }
-
-    fun updateAuthor(date: String) {
-        expense = expense.copy(
-            date = date
-        )
-    }
-
-    fun openDialog() {
-        openDialog = true
-    }
-
-    fun closeDialog() {
-        openDialog = false
     }
 }

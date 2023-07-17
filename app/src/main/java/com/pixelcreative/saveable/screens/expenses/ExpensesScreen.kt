@@ -21,7 +21,6 @@ import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.ui.theme.Black
 import com.pixelcreative.saveable.ui.theme.White
-import java.time.LocalDate
 
 @Composable
 @ExperimentalMaterialApi
@@ -63,13 +62,11 @@ fun ExpensesScreen(
                 expenseDetailList = ExpenseDetailList(
                     expenseDetail = listOf(
                         ExpenseDetail(
-                            id = LocalDate.now().toString(),
                             price = 350.0,
                             isIncome = false,
                             category = "Alışveriş"
                         ),
                         ExpenseDetail(
-                            id = LocalDate.now().toString(),
                             price = 200.0,
                             isIncome = false,
                             category = "Giyim"
@@ -94,27 +91,7 @@ fun ExpensesScreen(
 
         SummaryCard(
             modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp),
-            latestExpense = Expense(
-                id = 0L,
-                date = "Date",
-                expenseDetailList = ExpenseDetailList(
-                    expenseDetail = listOf(
-                        ExpenseDetail(
-                            id = LocalDate.now().toString(),
-                            price = 350.0,
-                            isIncome = false,
-                            category = "Alışveriş"
-                        ),
-                        ExpenseDetail(
-                            id = LocalDate.now().toString(),
-                            price = 200.0,
-                            isIncome = false,
-                            category = "Giyim"
-                        )
-                    )
-                ),
-                dailyTotalExpense = "550.0 TL"
-            )
+            latestExpense = latestExpense
         )
     }
 }

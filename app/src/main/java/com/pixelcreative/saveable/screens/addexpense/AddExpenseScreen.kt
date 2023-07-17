@@ -1,24 +1,21 @@
 package com.pixelcreative.saveable.screens.addexpense
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,10 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pixelcreative.saveable.components.AutoComplete
+import com.pixelcreative.saveable.core.doubleOrZero
+import com.pixelcreative.saveable.core.getLocalDateAsString
+import com.pixelcreative.saveable.domain.model.Expense
+import com.pixelcreative.saveable.domain.model.ExpenseDetail
+import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.screens.expenses.ExpensesViewModel
 import com.pixelcreative.saveable.ui.theme.Black
-import com.pixelcreative.saveable.ui.theme.PhilippineGray
 import com.pixelcreative.saveable.ui.theme.White
 import com.pixelcreative.saveable.ui.theme.Zomp
 
@@ -40,7 +42,18 @@ import com.pixelcreative.saveable.ui.theme.Zomp
 fun AddExpenseScreen(
     router: Router
 ) {
-    val viewModel: ExpensesViewModel = hiltViewModel()
+    val expensesViewModel: ExpensesViewModel = hiltViewModel()
+    var expenseAmount by rememberSaveable { mutableStateOf("") }
+    var selectedCategory by rememberSaveable { mutableStateOf("") }
+    val dailyAmount = 0.0
+
+    expensesViewModel.dailyExpense.expenseDetailList?.expenseDetail?.forEach { expenseDetail ->
+        dailyAmount.plus(expenseDetail.price.doubleOrZero())
+    }
+
+    val latestExpense by expensesViewModel.latestExpense.collectAsState(
+        initial = null
+    )
 
     Column(
         modifier = Modifier
@@ -67,15 +80,13 @@ fun AddExpenseScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            var text by rememberSaveable { mutableStateOf("") }
-
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                value = text,
+                value = expenseAmount,
                 onValueChange = {
-                    text = it
+                    expenseAmount = it
                 },
                 placeholder = {
                     Text(text = "Tutar buraya")
@@ -93,32 +104,74 @@ fun AddExpenseScreen(
 
             val categories = listOf("Yeme-İçme", "Market", "Elektronik", "Evcil Hayvan")
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-                    .padding(8.dp)
-            ) {
-                categories.forEach { category ->
-                    Box(
-                        modifier = Modifier
-                            .background(Black)
-                            .padding(8.dp)
-                            .border(
-                                width = 1.dp,
-                                shape = RoundedCornerShape(8.dp),
-                                color = PhilippineGray
+            AutoComplete(
+                categories = categories,
+                onCategorySelected = { category ->
+                    selectedCategory = category
+                }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    latestExpense?.let { lastExpense ->
+                        if (lastExpense.date != getLocalDateAsString()) {
+                            expensesViewModel.addExpense(
+                                Expense(
+                                    date = getLocalDateAsString(),
+                                    expenseDetailList = ExpenseDetailList(
+                                        expenseDetail = listOf(
+                                            ExpenseDetail(
+                                                price = expenseAmount.toDouble(),
+                                                isIncome = false,
+                                                category = selectedCategory
+                                            )
+                                        )
+                                    ),
+                                    dailyTotalExpense = expenseAmount
+                                )
                             )
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(8.dp),
-                            text = category,
-                            color = White,
-                            style = MaterialTheme.typography.h6
+                        } else {
+                            expensesViewModel.updateExpenseList(
+                                expenseDetailList = ExpenseDetailList(
+                                    expenseDetail = listOf(
+                                        ExpenseDetail(
+                                            price = expenseAmount.toDouble(),
+                                            isIncome = false,
+                                            category = selectedCategory
+                                        )
+                                    )
+                                ),
+                                date = getLocalDateAsString(),
+                                dailyTotalExpense = dailyAmount.plus(expenseAmount.toDouble())
+                                    .toString()
+                            )
+                        }
+                    } ?: run {
+                        expensesViewModel.addExpense(
+                            Expense(
+                                date = getLocalDateAsString(),
+                                expenseDetailList = ExpenseDetailList(
+                                    expenseDetail = listOf(
+                                        ExpenseDetail(
+                                            price = expenseAmount.toDouble(),
+                                            isIncome = false,
+                                            category = selectedCategory
+                                        )
+                                    )
+                                ),
+                                dailyTotalExpense = expenseAmount
+                            )
                         )
                     }
-                }
+                },
+            ) {
+                Text(
+                    text = "Kaydet",
+                    color = Zomp,
+                    style = MaterialTheme.typography.h1
+                )
             }
         }
     }
