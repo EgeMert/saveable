@@ -3,8 +3,10 @@ package com.pixelcreative.saveable.screens.addexpense
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -25,8 +27,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.AutoComplete
+import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
+import com.pixelcreative.saveable.domain.model.IncomeDetail
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.screens.expenses.ExpensesViewModel
 import com.pixelcreative.saveable.ui.theme.Black
@@ -39,7 +43,7 @@ fun AddExpenseScreen(
     router: Router
 ) {
     val expensesViewModel: ExpensesViewModel = hiltViewModel()
-    var expenseAmount by rememberSaveable { mutableStateOf("") }
+    var userInput by rememberSaveable { mutableStateOf("") }
     var selectedCategory by rememberSaveable { mutableStateOf("") }
 
     val latestExpense by expensesViewModel.latestExpense.collectAsState(
@@ -75,9 +79,9 @@ fun AddExpenseScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                value = expenseAmount,
+                value = userInput,
                 onValueChange = {
-                    expenseAmount = it
+                    userInput = it
                 },
                 placeholder = {
                     Text(text = "Tutar buraya")
@@ -106,34 +110,67 @@ fun AddExpenseScreen(
                 onClick = {
                     latestExpense?.let { lastExpense ->
                         if (lastExpense.date != getLocalDateAsString()) {
-                            expensesViewModel.addExpense(
-                                expenseAmount = expenseAmount,
+                            expensesViewModel.addDailyExpense(
+                                expenseAmount = userInput.toDouble(),
                                 selectedCategory = selectedCategory
                             )
                         } else {
                             expensesViewModel.updateExpenseList(
-                                expenseDetail = latestExpense?.expenseDetailList?.expenseDetail?.plus(
+                                expenseDetail = lastExpense.expenseDetailList?.expenseDetail?.plus(
                                     ExpenseDetail(
-                                        price = expenseAmount.toDouble(),
-                                        isIncome = false,
+                                        price = userInput.toDouble(),
                                         category = selectedCategory
                                     )
                                 ),
                                 dailyTotalExpense =
-                                (latestExpense?.dailyTotalExpense?.toDouble())?.plus(expenseAmount.toDouble())
-                                    .toString()
+                                (latestExpense?.dailyTotalExpense?.toDouble())?.plus(userInput.toDouble()).doubleOrZero()
                             )
                         }
                     } ?: run {
-                        expensesViewModel.addExpense(
-                            expenseAmount = expenseAmount,
+                        expensesViewModel.addDailyExpense(
+                            expenseAmount = userInput.toDouble(),
                             selectedCategory = selectedCategory
                         )
                     }
                 },
             ) {
                 Text(
-                    text = "Kaydet",
+                    text = "Expense",
+                    color = White,
+                    style = MaterialTheme.typography.h1
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    latestExpense?.let { lastExpense ->
+                        if (lastExpense.date != getLocalDateAsString()) {
+                            expensesViewModel.addDailyIncome(
+                                incomeAmount = userInput.toDouble(),
+                                selectedCategory = selectedCategory
+                            )
+                        } else {
+                            expensesViewModel.updateIncomeList(
+                                incomeDetailList = lastExpense.incomeDetailList?.incomeDetail?.plus(
+                                    IncomeDetail(
+                                        price = userInput.toDouble(),
+                                        category = selectedCategory
+                                    )
+                                ),
+                                dailyTotalIncome =
+                                (latestExpense?.dailyTotalIncome?.toDouble())?.plus(userInput.toDouble()).doubleOrZero()
+                            )
+                        }
+                    } ?: run {
+                        expensesViewModel.addDailyIncome(
+                            incomeAmount = userInput.toDouble(),
+                            selectedCategory = selectedCategory
+                        )
+                    }
+                },
+            ) {
+                Text(
+                    text = "Income",
                     color = White,
                     style = MaterialTheme.typography.h1
                 )

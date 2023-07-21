@@ -10,6 +10,7 @@ import com.pixelcreative.saveable.core.Constants.Companion.EXPENSE_DETAIL_TABLE
 import com.pixelcreative.saveable.core.Constants.Companion.EXPENSE_TABLE
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
+import com.pixelcreative.saveable.domain.model.IncomeDetailList
 import com.pixelcreative.saveable.domain.repository.ExpenseDetails
 import com.pixelcreative.saveable.domain.repository.Expenses
 import kotlinx.coroutines.flow.Flow
@@ -28,11 +29,17 @@ interface ExpenseDao {
     @Update
     suspend fun updateExpense(expense: Expense)
 
-    @Query("UPDATE $EXPENSE_TABLE SET expenseDetailList=:expenseDetailList, dailyTotalExpense=:dailyTotalExpense WHERE date=:date")
+    @Query("UPDATE $EXPENSE_TABLE SET expenseDetailList=:expenseDetailList, dailyTotalExpense=:expenseInput WHERE date=:date")
     suspend fun updateExpenseList(
         expenseDetailList: ExpenseDetailList,
         date: String,
-        dailyTotalExpense: String
+        expenseInput: Double
+    ): Int
+    @Query("UPDATE $EXPENSE_TABLE SET incomeDetailList=:incomeDetailList, dailyTotalIncome=:incomeInput WHERE date=:date")
+    suspend fun updateDailyIncomeList(
+        incomeDetailList: IncomeDetailList,
+        date: String,
+        incomeInput: Double
     ): Int
 
     @Delete

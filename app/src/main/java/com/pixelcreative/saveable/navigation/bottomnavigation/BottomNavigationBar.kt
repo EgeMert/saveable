@@ -8,9 +8,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.pixelcreative.saveable.ui.theme.BondyBlue
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
@@ -21,8 +23,8 @@ fun BottomNavigationBar(navController: NavHostController) {
             BottomNavigationItem(
                 selected = currentRoute == navItem.route,
                 modifier = Modifier.background(MaterialTheme.colors.background),
-                selectedContentColor = MaterialTheme.colors.onSecondary,
-                unselectedContentColor = MaterialTheme.colors.onPrimary,
+                selectedContentColor = BondyBlue,
+                unselectedContentColor = Color.White,
                 onClick = {
                     navController.navigate(navItem.route) {
                         popUpTo(navController.graph.findStartDestination().id) {

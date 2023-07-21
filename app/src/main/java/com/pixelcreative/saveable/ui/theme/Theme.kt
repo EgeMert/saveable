@@ -11,12 +11,14 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = BrightTurquoise,
     primaryVariant = BrightTurquoise,
     secondary = Teal200,
-    background = Black,
+    background = BluishPurple,
     surface = CharlestonGreen,
     onPrimary = White,
     onSecondary = BrightTurquoise,
@@ -25,19 +27,20 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Zomp,
-    primaryVariant = Zomp,
+    primary = BrightTurquoise,
+    primaryVariant = BrightTurquoise,
     secondary = Teal200,
-    background = White,
+    background = BluishPurple,
     surface = CharlestonGreen,
-    onPrimary = Black,
-    onSecondary = Zomp,
+    onPrimary = White,
+    onSecondary = BrightTurquoise,
     onBackground = CharlestonGreen,
     onSurface = Emerald,
 )
 
 @Composable
 fun SaveableTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
@@ -47,9 +50,8 @@ fun SaveableTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colors.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-
+            window.statusBarColor = colors.background.toArgb()
+           // WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 

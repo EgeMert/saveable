@@ -4,6 +4,7 @@ import com.pixelcreative.saveable.data.dao.ExpenseDao
 import com.pixelcreative.saveable.data.dao.ExpenseDetailDao
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
+import com.pixelcreative.saveable.domain.model.IncomeDetailList
 import com.pixelcreative.saveable.domain.repository.ExpenseDetailRepository
 import com.pixelcreative.saveable.domain.repository.ExpenseRepository
 
@@ -23,12 +24,19 @@ class ExpenseRepositoryImpl(
     override fun getDailyExpense(date: String) = expenseDao.getDailyExpense(date)
 
     override fun getLatestExpense() = expenseDao.getLatestExpense()
-    override suspend fun updateExpenseList(
+    override suspend fun updateDailyExpenseList(
         expenseDetailList: ExpenseDetailList,
         date: String,
-        dailyTotalExpense: String
+        dailyTotalExpense: Double
     ) =
         expenseDao.updateExpenseList(expenseDetailList, date, dailyTotalExpense)
+
+    override suspend fun updateDailyIncomeList(
+        incomeDetailList: IncomeDetailList,
+        date: String,
+        dailyTotalIncome: Double
+    )=
+        expenseDao.updateDailyIncomeList(incomeDetailList, date, dailyTotalIncome)
 }
 
 class ExpenseDetailRepositoryImpl(

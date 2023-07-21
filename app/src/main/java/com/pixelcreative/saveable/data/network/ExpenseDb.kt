@@ -4,10 +4,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.pixelcreative.saveable.data.ExpenseDbConverter
+import com.pixelcreative.saveable.data.IncomeDbConverter
 import com.pixelcreative.saveable.data.dao.ExpenseDao
 import com.pixelcreative.saveable.domain.model.Expense
 
-@TypeConverters(value=[ExpenseDbConverter::class])
+@TypeConverters(value=[ExpenseDbConverter::class,IncomeDbConverter::class])
 @Database(
     entities = [Expense::class],
     version = 1,

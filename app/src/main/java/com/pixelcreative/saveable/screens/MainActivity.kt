@@ -9,6 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import com.pixelcreative.saveable.navigation.RouterImplementation
 import com.pixelcreative.saveable.navigation.SaveableNavGraph
 import com.pixelcreative.saveable.navigation.Screens
 import com.pixelcreative.saveable.navigation.bottomnavigation.BottomNavigationBar
+import com.pixelcreative.saveable.ui.theme.BluishPurple
 import com.pixelcreative.saveable.ui.theme.SaveableTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,10 +34,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val systemUiController: SystemUiController = rememberSystemUiController()
 
-            systemUiController.setStatusBarColor(MaterialTheme.colors.background)
-            systemUiController.statusBarDarkContentEnabled = true
+            val systemUiController: SystemUiController = rememberSystemUiController()
+            DisposableEffect(systemUiController){
+                systemUiController.setStatusBarColor(BluishPurple)
+                systemUiController.setSystemBarsColor(BluishPurple)
+                onDispose {  }
+            }
+
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val route = navBackStackEntry?.destination?.route ?: Screens.SplashScreen.route

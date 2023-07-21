@@ -3,6 +3,7 @@ package com.pixelcreative.saveable.domain.repository
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
+import com.pixelcreative.saveable.domain.model.IncomeDetailList
 import kotlinx.coroutines.flow.Flow
 
 typealias Expenses = List<Expense>
@@ -23,10 +24,15 @@ interface ExpenseRepository {
 
     fun getLatestExpense(): Flow<Expense>
 
-    suspend fun updateExpenseList(
+    suspend fun updateDailyExpenseList(
         expenseDetailList: ExpenseDetailList,
         date: String,
-        dailyTotalExpense: String
+        dailyTotalExpense: Double
+    ): Int
+    suspend fun updateDailyIncomeList(
+        incomeDetailList: IncomeDetailList,
+        date: String,
+        dailyTotalIncome: Double
     ): Int
 }
 

@@ -33,17 +33,17 @@ fun SummaryCard_Preview() {
                 expenseDetail = listOf(
                     ExpenseDetail(
                         price = 350.0,
-                        isIncome = false,
+
                         category = "Alışveriş"
                     ),
                     ExpenseDetail(
                         price = 200.0,
-                        isIncome = false,
                         category = "Giyim"
                     )
                 )
             ),
-            dailyTotalExpense = "550.0 TL"
+            dailyTotalExpense = 550.00,
+            incomeDetailList = null
         )
     )
 }

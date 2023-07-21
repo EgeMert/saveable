@@ -50,7 +50,7 @@ fun DailySummary(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = expense.dailyTotalExpense,
+                    text = expense.dailyTotalExpense.toString(),
                     color = White,
                     style = MaterialTheme.typography.h3
                 )
