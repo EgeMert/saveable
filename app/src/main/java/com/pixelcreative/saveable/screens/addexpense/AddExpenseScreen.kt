@@ -3,7 +3,6 @@ package com.pixelcreative.saveable.screens.addexpense
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,9 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.AutoComplete
 import com.pixelcreative.saveable.core.getLocalDateAsString
-import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
-import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.screens.expenses.ExpensesViewModel
 import com.pixelcreative.saveable.ui.theme.Black
@@ -105,39 +102,23 @@ fun AddExpenseScreen(
                 }
             )
 
-            Spacer(modifier = Modifier.weight(1f))
-
             Button(
                 onClick = {
                     latestExpense?.let { lastExpense ->
                         if (lastExpense.date != getLocalDateAsString()) {
                             expensesViewModel.addExpense(
-                                Expense(
-                                    date = getLocalDateAsString(),
-                                    expenseDetailList = ExpenseDetailList(
-                                        expenseDetail = listOf(
-                                            ExpenseDetail(
-                                                price = expenseAmount.toDouble(),
-                                                isIncome = false,
-                                                category = selectedCategory
-                                            )
-                                        )
-                                    ),
-                                    dailyTotalExpense = expenseAmount
-                                )
+                                expenseAmount = expenseAmount,
+                                selectedCategory = selectedCategory
                             )
                         } else {
                             expensesViewModel.updateExpenseList(
-                                expenseDetailList = ExpenseDetailList(
-                                    expenseDetail = latestExpense?.expenseDetailList?.expenseDetail?.plus(
-                                        ExpenseDetail(
-                                            price = expenseAmount.toDouble(),
-                                            isIncome = false,
-                                            category = selectedCategory
-                                        )
+                                expenseDetail = latestExpense?.expenseDetailList?.expenseDetail?.plus(
+                                    ExpenseDetail(
+                                        price = expenseAmount.toDouble(),
+                                        isIncome = false,
+                                        category = selectedCategory
                                     )
                                 ),
-                                date = getLocalDateAsString(),
                                 dailyTotalExpense =
                                 (latestExpense?.dailyTotalExpense?.toDouble())?.plus(expenseAmount.toDouble())
                                     .toString()
@@ -145,26 +126,15 @@ fun AddExpenseScreen(
                         }
                     } ?: run {
                         expensesViewModel.addExpense(
-                            Expense(
-                                date = getLocalDateAsString(),
-                                expenseDetailList = ExpenseDetailList(
-                                    expenseDetail = listOf(
-                                        ExpenseDetail(
-                                            price = expenseAmount.toDouble(),
-                                            isIncome = false,
-                                            category = selectedCategory
-                                        )
-                                    )
-                                ),
-                                dailyTotalExpense = expenseAmount
-                            )
+                            expenseAmount = expenseAmount,
+                            selectedCategory = selectedCategory
                         )
                     }
                 },
             ) {
                 Text(
                     text = "Kaydet",
-                    color = Zomp,
+                    color = White,
                     style = MaterialTheme.typography.h1
                 )
             }

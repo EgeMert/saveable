@@ -6,7 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
+import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.Expense
+import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.domain.repository.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,18 +50,31 @@ class ExpensesViewModel @Inject constructor(
     }
 
     fun updateExpenseList(
-        expenseDetailList: ExpenseDetailList,
-        date: String,
+        expenseDetail: List<ExpenseDetail>?,
         dailyTotalExpense: String
     ) = viewModelScope.launch {
-        repo.updateExpenseList(expenseDetailList, date, dailyTotalExpense)
+
+        val expenseDetailList = ExpenseDetailList(
+            expenseDetail = expenseDetail
+        )
+        repo.updateExpenseList(expenseDetailList, getLocalDateAsString(), dailyTotalExpense)
     }
 
-    fun getExpense(id: Long) = viewModelScope.launch {
-        expense = repo.getExpenseFromRoom(id)
-    }
+    fun addExpense(expenseAmount: String, selectedCategory: String) = viewModelScope.launch {
 
-    fun addExpense(expense: Expense) = viewModelScope.launch {
+        val expense = Expense(
+            date = getLocalDateAsString(),
+            expenseDetailList = ExpenseDetailList(
+                expenseDetail = listOf(
+                    ExpenseDetail(
+                        price = expenseAmount.toDouble(),
+                        isIncome = false,
+                        category = selectedCategory
+                    )
+                )
+            ),
+            dailyTotalExpense = expenseAmount
+        )
         repo.addExpenseToRoom(expense)
     }
 
@@ -69,11 +84,5 @@ class ExpensesViewModel @Inject constructor(
 
     fun deleteExpense(expense: Expense) = viewModelScope.launch {
         repo.deleteExpenseFromRoom(expense)
-    }
-
-    fun updateTitle(dailyTotalExpense: String) {
-        expense = expense.copy(
-            dailyTotalExpense = dailyTotalExpense
-        )
     }
 }
