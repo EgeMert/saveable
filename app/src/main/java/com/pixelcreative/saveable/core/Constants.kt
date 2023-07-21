@@ -1,5 +1,9 @@
 package com.pixelcreative.saveable.core
 
+import com.pixelcreative.saveable.domain.model.Expense
+import com.pixelcreative.saveable.domain.model.ExpenseDetail
+import com.pixelcreative.saveable.domain.model.ExpenseDetailList
+
 class Constants {
     companion object {
         //Room
@@ -30,5 +34,33 @@ class Constants {
         //Basket Screen
         const val SPENT_TODAY_TITLE = "You've saved"
         const val SPENT_TODAY = "Today's summary"
+
+        val dummyExpense = Expense(
+            expenseDetailList = ExpenseDetailList(
+                expenseDetail = listOf(
+                    ExpenseDetail(
+                        price = 50.0,
+                        isIncome = false,
+                        category = "Food"
+                    ),
+                    ExpenseDetail(
+                        price = 40.0,
+                        isIncome = false,
+                        category = "Shopping"
+                    ),
+                    ExpenseDetail(
+                        price = 30.0,
+                        isIncome = false,
+                        category = "Transport"
+                    ),
+                    ExpenseDetail(
+                        price = 20.0,
+                        isIncome = false,
+                        category = "Health"
+                    )
+                )
+            ),
+            dailyTotalExpense = "Boş"
+        )
     }
 }

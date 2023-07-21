@@ -1,30 +1,25 @@
 package com.pixelcreative.saveable.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import com.pixelcreative.saveable.core.getImageFromLabel
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
-import com.pixelcreative.saveable.ui.theme.CharlestonGreen
-import com.pixelcreative.saveable.ui.theme.Emerald
-import com.pixelcreative.saveable.ui.theme.PhilippineGray
+import com.pixelcreative.saveable.ui.theme.Pinball
 import com.pixelcreative.saveable.ui.theme.White
 
 @Preview
@@ -70,9 +65,16 @@ fun SummaryCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(CharlestonGreen)
     ) {
+
+        Text(
+            modifier = Modifier
+                .padding(bottom = 12.dp),
+            text = "Recent Expenses",
+            color = White,
+            style = MaterialTheme.typography.h2
+        )
+
         latestExpense?.let { latestExpense ->
             latestExpense.expenseDetailList?.expenseDetail?.forEachIndexed { index, expenseDetail ->
 
@@ -82,39 +84,42 @@ fun SummaryCard(
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(
-                        modifier = Modifier
-                            .size(32.dp),
-                        painter = rememberAsyncImagePainter(
-                            model = "https://cdn1.iconfinder.com/data/icons/unicons-line-vol-5/24/shopping-cart-256.png"
-                        ),
-                        contentDescription = null
-                    )
+                    val imagePainter = getImageFromLabel(expenseDetail.category ?: "Food")
+                    imagePainter?.let {
+                        Image(
+                            modifier = Modifier.size(44.dp),
+                            painter = it,
+                            contentDescription = expenseDetail.category.orEmpty()
+                        )
+                    }
                     Text(
                         modifier = Modifier
                             .padding(start = 8.dp),
                         text = expenseDetail.category.orEmpty(),
                         color = White,
-                        style = MaterialTheme.typography.subtitle1
+                        style = MaterialTheme.typography.h5
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = expenseDetail.price.toString() + " TL",
-                        color = Emerald,
-                        style = MaterialTheme.typography.subtitle1
-                    )
-                }
-
-                if (index != latestExpense.expenseDetailList?.expenseDetail?.size?.minus(1)) {
-                    Divider(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                        color = PhilippineGray,
-                        thickness = 1.dp
+                        text = "$ " + expenseDetail.price.toString(),
+                        color = White,
+                        style = MaterialTheme.typography.h5
                     )
                 }
             }
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                text = "See All",
+                color = Pinball,
+                style = MaterialTheme.typography.subtitle1,
+                textAlign = TextAlign.End
+            )
+
         } ?: run {
             Text(
                 modifier = Modifier

@@ -9,3 +9,7 @@ fun Double?.doubleOrZero(): Double {
 fun getLocalDateAsString(): String{
     return (LocalDate.now().dayOfMonth + LocalDate.now().monthValue + LocalDate.now().year).toString()
 }
+
+fun String?.orNone(): String {
+    return this ?: "-"
+}
