@@ -76,7 +76,13 @@ fun SummaryCard(
         )
 
         latestExpense?.let { latestExpense ->
-            latestExpense.expenseDetailList?.expenseDetail?.forEachIndexed { index, expenseDetail ->
+            latestExpense.expenseDetailList?.expenseDetail?.zip(latestExpense.incomeDetailList?.incomeDetail.orEmpty())?.forEach {pair ->
+                pair.first.category
+            }
+
+            latestExpense.expenseDetailList?.expenseDetail?.takeLast(4)?.let { expenseDetailList ->
+                expenseDetailList.takeLast(minOf(4, expenseDetailList.size))
+            }?.reversed()?.forEachIndexed { index, expenseDetail ->
 
                 Row(
                     modifier = Modifier
