@@ -19,6 +19,7 @@ import com.pixelcreative.saveable.core.getImageFromLabel
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
+import com.pixelcreative.saveable.domain.model.IncomeDetail
 import com.pixelcreative.saveable.ui.theme.Pinball
 import com.pixelcreative.saveable.ui.theme.White
 
@@ -56,6 +57,18 @@ fun SummaryCard_Preview2() {
     )
 }
 
+fun mergeLists(
+    incomeList: List<IncomeDetail>,
+    expenseList: List<ExpenseDetail>
+): List<ExpenseDetail> {
+    val mappedIncomeList =
+        incomeList.map { ExpenseDetail(price = it.price, category = it.category) }
+    val mergedList = mutableListOf<ExpenseDetail>()
+    mergedList.addAll(mappedIncomeList)
+    mergedList.addAll(expenseList)
+    return mergedList
+}
+
 @Composable
 fun SummaryCard(
     modifier: Modifier = Modifier,
@@ -76,32 +89,30 @@ fun SummaryCard(
         )
 
         latestExpense?.let { latestExpense ->
-            latestExpense.expenseDetailList?.expenseDetail?.zip(latestExpense.incomeDetailList?.incomeDetail.orEmpty())?.forEach {pair ->
-                pair.first.category
-            }
-
-            latestExpense.expenseDetailList?.expenseDetail?.takeLast(4)?.let { expenseDetailList ->
+            mergeLists(
+                latestExpense.incomeDetailList?.incomeDetail.orEmpty(),
+                latestExpense.expenseDetailList?.expenseDetail.orEmpty()
+            ).takeLast(4).let { expenseDetailList ->
                 expenseDetailList.takeLast(minOf(4, expenseDetailList.size))
-            }?.reversed()?.forEachIndexed { index, expenseDetail ->
-
+            }.reversed().forEach { pair ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val imagePainter = getImageFromLabel(expenseDetail.category ?: "Food")
+                    val imagePainter = getImageFromLabel(pair.category ?: "Food")
                     imagePainter?.let {
                         Image(
                             modifier = Modifier.size(44.dp),
                             painter = it,
-                            contentDescription = expenseDetail.category.orEmpty()
+                            contentDescription = pair.category.orEmpty()
                         )
                     }
                     Text(
                         modifier = Modifier
                             .padding(start = 8.dp),
-                        text = expenseDetail.category.orEmpty(),
+                        text = pair.category.orEmpty(),
                         color = White,
                         style = MaterialTheme.typography.h5
                     )
@@ -109,12 +120,13 @@ fun SummaryCard(
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = "$ " + expenseDetail.price.toString(),
+                        text = "$ " + pair.price.toString(),
                         color = White,
                         style = MaterialTheme.typography.h5
                     )
                 }
             }
+
 
             Text(
                 modifier = Modifier
