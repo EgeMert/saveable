@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.AutoComplete
 import com.pixelcreative.saveable.core.doubleOrZero
+import com.pixelcreative.saveable.core.getAllCategories
 import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.domain.model.IncomeDetail
@@ -97,10 +98,8 @@ fun AddExpenseScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
 
-            val categories = listOf("Yeme-İçme", "Market", "Elektronik", "Evcil Hayvan")
-
             AutoComplete(
-                categories = categories,
+                categories = getAllCategories(),
                 onCategorySelected = { category ->
                     selectedCategory = category
                 }

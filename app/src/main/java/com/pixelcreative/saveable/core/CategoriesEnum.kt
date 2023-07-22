@@ -19,3 +19,6 @@ fun getImageFromLabel(label: String): Painter? {
     val matchingEnum = CategoriesEnum.values().find { it.label == label }
     return matchingEnum?.let { painterResource(it.imageResId) }
 }
+fun getAllCategories(): List<String> {
+    return CategoriesEnum.values().map { it.label }
+}
