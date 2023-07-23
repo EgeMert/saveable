@@ -17,7 +17,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.DailyLimitCard
 import com.pixelcreative.saveable.components.SummaryCard
 import com.pixelcreative.saveable.components.TotalBalanceCard
+import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.ui.theme.BlackHtun
 import com.pixelcreative.saveable.ui.theme.BluishPurple
@@ -45,9 +45,9 @@ fun ExpensesScreen(
 ) {
     val expensesViewModel: ExpensesViewModel = hiltViewModel()
 
-    val latestExpense by expensesViewModel.latestExpense.collectAsState(
-        initial = null
-    )
+    expensesViewModel.getDailyExpense(getLocalDateAsString())
+
+    val dailyExpense = expensesViewModel.dailyExpense.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -102,7 +102,7 @@ fun ExpensesScreen(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 20.dp)
                 .weight(3.7f),
-            latestExpense = latestExpense
+            latestExpense = dailyExpense
         )
 
         Row(

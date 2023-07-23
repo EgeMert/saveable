@@ -4,11 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.pixelcreative.saveable.core.Constants.Companion.EXPENSE_TABLE
 import com.pixelcreative.saveable.data.dao.ExpenseDao
-import com.pixelcreative.saveable.data.dao.ExpenseDetailDao
 import com.pixelcreative.saveable.data.network.ExpenseDb
-import com.pixelcreative.saveable.data.repository.ExpenseDetailRepositoryImpl
 import com.pixelcreative.saveable.data.repository.ExpenseRepositoryImpl
-import com.pixelcreative.saveable.domain.repository.ExpenseDetailRepository
 import com.pixelcreative.saveable.domain.repository.ExpenseRepository
 import dagger.Module
 import dagger.Provides
@@ -41,10 +38,4 @@ class AppModule {
         expenseDao = expenseDao
     )
 
-    @Provides
-    fun provideExpenseDetailRepository(
-        expenseDetailDao: ExpenseDetailDao
-    ): ExpenseDetailRepository = ExpenseDetailRepositoryImpl(
-        expenseDetailDao = expenseDetailDao
-    )
 }

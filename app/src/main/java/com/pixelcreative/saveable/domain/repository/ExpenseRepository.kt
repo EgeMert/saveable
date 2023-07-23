@@ -10,7 +10,7 @@ typealias Expenses = List<Expense>
 typealias ExpenseDetails = List<ExpenseDetail>
 
 interface ExpenseRepository {
-    fun getExpensesFromRoom(): Flow<Expenses>
+    //suspend fun getExpensesFromRoom(): Expenses
 
     suspend fun getExpenseFromRoom(id: Long): Expense
 
@@ -20,9 +20,9 @@ interface ExpenseRepository {
 
     suspend fun deleteExpenseFromRoom(expense: Expense)
 
-    fun getDailyExpense(date: String): Expense
+    suspend fun getDailyExpense(date: String): Expense?
 
-    fun getLatestExpense(): Flow<Expense>
+    suspend fun getLatestExpense(): Expense?
 
     suspend fun updateDailyExpenseList(
         expenseDetailList: ExpenseDetailList,
@@ -38,7 +38,7 @@ interface ExpenseRepository {
 
 interface ExpenseDetailRepository {
 
-    fun getExpenseDetailsFromRoom(id: Long): Flow<ExpenseDetails>
+    suspend fun getExpenseDetailsFromRoom(id: Long): Flow<ExpenseDetails>
 
     suspend fun getExpenseDetailsWithId(id: Long): Expense
 }

@@ -1,52 +1,60 @@
 package com.pixelcreative.saveable.data.repository
 
 import com.pixelcreative.saveable.data.dao.ExpenseDao
-import com.pixelcreative.saveable.data.dao.ExpenseDetailDao
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.domain.model.IncomeDetailList
-import com.pixelcreative.saveable.domain.repository.ExpenseDetailRepository
 import com.pixelcreative.saveable.domain.repository.ExpenseRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ExpenseRepositoryImpl(
     private val expenseDao: ExpenseDao
 ) : ExpenseRepository {
 
-    override fun getExpensesFromRoom() = expenseDao.getExpenses()
+    /*    override suspend fun getExpensesFromRoom() = withContext(Dispatchers.IO) {
+            expenseDao.getExpenses()
+        }*/
 
-    override suspend fun getExpenseFromRoom(id: Long) = expenseDao.getExpense(id)
+    override suspend fun getExpenseFromRoom(id: Long) = withContext(Dispatchers.IO) {
+        expenseDao.getExpense(id)
+    }
 
-    override suspend fun addExpenseToRoom(expense: Expense) = expenseDao.addExpense(expense)
+    override suspend fun addExpenseToRoom(expense: Expense) = withContext(Dispatchers.IO) {
+        expenseDao.addExpense(expense)
+    }
 
-    override suspend fun updateExpenseInRoom(expense: Expense) = expenseDao.updateExpense(expense)
+    override suspend fun updateExpenseInRoom(expense: Expense) = withContext(Dispatchers.IO) {
+        expenseDao.updateExpense(expense)
+    }
 
-    override suspend fun deleteExpenseFromRoom(expense: Expense) = expenseDao.deleteExpense(expense)
-    override fun getDailyExpense(date: String) = expenseDao.getDailyExpense(date)
+    override suspend fun deleteExpenseFromRoom(expense: Expense) = withContext(Dispatchers.IO) {
+        expenseDao.deleteExpense(expense)
+    }
 
-    override fun getLatestExpense() = expenseDao.getLatestExpense()
+    override suspend fun getDailyExpense(date: String) = withContext(Dispatchers.IO) {
+        expenseDao.getDailyExpense(date)
+    }
+
+    override suspend fun getLatestExpense() = withContext(Dispatchers.IO) {
+        expenseDao.getLatestExpense()
+    }
+
     override suspend fun updateDailyExpenseList(
         expenseDetailList: ExpenseDetailList,
         date: String,
         dailyTotalExpense: Double
-    ) =
+    ) = withContext(Dispatchers.IO) {
         expenseDao.updateExpenseList(expenseDetailList, date, dailyTotalExpense)
+    }
 
     override suspend fun updateDailyIncomeList(
         incomeDetailList: IncomeDetailList,
         date: String,
         dailyTotalIncome: Double
-    )=
-        expenseDao.updateDailyIncomeList(incomeDetailList, date, dailyTotalIncome)
-}
-
-class ExpenseDetailRepositoryImpl(
-    private val expenseDetailDao: ExpenseDetailDao
-) : ExpenseDetailRepository {
-
-    override fun getExpenseDetailsFromRoom(id: Long) = expenseDetailDao.getExpenseDetails(id)
-
-    override suspend fun getExpenseDetailsWithId(id: Long): Expense {
-        TODO("Not yet implemented")
-    }
+    ) =
+        withContext(Dispatchers.IO) {
+            expenseDao.updateDailyIncomeList(incomeDetailList, date, dailyTotalIncome)
+        }
 
 }

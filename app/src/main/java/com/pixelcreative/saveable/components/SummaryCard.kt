@@ -20,6 +20,7 @@ import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
 import com.pixelcreative.saveable.domain.model.IncomeDetail
+import com.pixelcreative.saveable.ui.theme.Emerald
 import com.pixelcreative.saveable.ui.theme.Pinball
 import com.pixelcreative.saveable.ui.theme.White
 
@@ -62,7 +63,13 @@ fun mergeLists(
     expenseList: List<ExpenseDetail>
 ): List<ExpenseDetail> {
     val mappedIncomeList =
-        incomeList.map { ExpenseDetail(price = it.price, category = it.category) }
+        incomeList.map { incomeDetail ->
+            ExpenseDetail(
+                price = incomeDetail.price,
+                category = incomeDetail.category,
+                isIncome = incomeDetail.isIncome
+            )
+        }
     val mergedList = mutableListOf<ExpenseDetail>()
     mergedList.addAll(mappedIncomeList)
     mergedList.addAll(expenseList)
@@ -94,25 +101,25 @@ fun SummaryCard(
                 latestExpense.expenseDetailList?.expenseDetail.orEmpty()
             ).takeLast(4).let { expenseDetailList ->
                 expenseDetailList.takeLast(minOf(4, expenseDetailList.size))
-            }.reversed().forEach { pair ->
+            }.reversed().forEach { expenseDetail ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val imagePainter = getImageFromLabel(pair.category ?: "Food")
+                    val imagePainter = getImageFromLabel(expenseDetail.category ?: "Food")
                     imagePainter?.let {
                         Image(
                             modifier = Modifier.size(44.dp),
                             painter = it,
-                            contentDescription = pair.category.orEmpty()
+                            contentDescription = expenseDetail.category.orEmpty()
                         )
                     }
                     Text(
                         modifier = Modifier
                             .padding(start = 8.dp),
-                        text = pair.category.orEmpty(),
+                        text = expenseDetail.category.orEmpty(),
                         color = White,
                         style = MaterialTheme.typography.h5
                     )
@@ -120,8 +127,16 @@ fun SummaryCard(
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = "$ " + pair.price.toString(),
-                        color = White,
+                        text = if (expenseDetail.isIncome == true) {
+                            "+ $ " + expenseDetail.price.toString()
+                        } else {
+                            "$ " + expenseDetail.price.toString()
+                        },
+                        color = if (expenseDetail.isIncome == true) {
+                            Emerald
+                        } else {
+                            White
+                        },
                         style = MaterialTheme.typography.h5
                     )
                 }

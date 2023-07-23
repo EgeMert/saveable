@@ -12,10 +12,12 @@ data class IncomeDetailList(
 data class ExpenseDetail(
     val id: String? = LocalDate.now().toString() + (System.currentTimeMillis().toString()),
     val price: Double?,
-    val category: String?
+    val category: String?,
+    val isIncome: Boolean? = false
 )
 data class IncomeDetail(
     val id: String? = LocalDate.now().toString() + (System.currentTimeMillis().toString()),
     val price: Double?,
-    val category: String?
+    val category: String?,
+    val isIncome: Boolean? = false
 )
