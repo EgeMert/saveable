@@ -11,7 +11,6 @@ data class Expense(
     var id: Long = 0L,
     var date: String? = getLocalDateAsString(),
     var expenseDetailList: ExpenseDetailList?,
-    var incomeDetailList: IncomeDetailList?,
     var dailyTotalExpense: Double=0.0,
     var dailyTotalIncome: Double=0.0,
 )

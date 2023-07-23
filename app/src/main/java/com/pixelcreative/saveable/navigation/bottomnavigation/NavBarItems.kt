@@ -17,7 +17,7 @@ object NavBarItems {
         ),
         BottomBarItem(
             image = Icons.Filled.DateRange,
-            route = Screens.SplashScreen.route
+            route = Screens.DetailScreen.route
         ),
         BottomBarItem(
             image = Icons.Filled.Add,

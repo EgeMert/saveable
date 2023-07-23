@@ -31,9 +31,8 @@ import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.getAllCategories
 import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
-import com.pixelcreative.saveable.domain.model.IncomeDetail
 import com.pixelcreative.saveable.navigation.Router
-import com.pixelcreative.saveable.screens.expenses.ExpensesViewModel
+import com.pixelcreative.saveable.screens.expenses.ExpensesScreenViewModel
 import com.pixelcreative.saveable.ui.theme.Black
 import com.pixelcreative.saveable.ui.theme.White
 import com.pixelcreative.saveable.ui.theme.Zomp
@@ -43,13 +42,13 @@ import com.pixelcreative.saveable.ui.theme.Zomp
 fun AddExpenseScreen(
     router: Router
 ) {
-    val expensesViewModel: ExpensesViewModel = hiltViewModel()
+    val expensesScreenViewModel: ExpensesScreenViewModel = hiltViewModel()
     var userInput by rememberSaveable { mutableStateOf("") }
     var selectedCategory by rememberSaveable { mutableStateOf("") }
 
-    expensesViewModel.getDailyExpense(getLocalDateAsString())
+    expensesScreenViewModel.getDailyExpense(getLocalDateAsString())
 
-    val dailyExpense = expensesViewModel.dailyExpense.collectAsState().value
+    val dailyExpense = expensesScreenViewModel.dailyExpense.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -109,12 +108,13 @@ fun AddExpenseScreen(
                 onClick = {
                     dailyExpense?.let { expense ->
                         if (expense.date != getLocalDateAsString()) {
-                            expensesViewModel.addDailyExpense(
+                            expensesScreenViewModel.addDailyExpense(
                                 expenseAmount = userInput.toDouble(),
-                                selectedCategory = selectedCategory
+                                selectedCategory = selectedCategory,
+                                incomeAmount = 0.0
                             )
                         } else {
-                            expensesViewModel.updateExpenseList(
+                            expensesScreenViewModel.updateExpenseList(
                                 expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
                                     ExpenseDetail(
                                         price = userInput.toDouble(),
@@ -123,13 +123,16 @@ fun AddExpenseScreen(
                                     )
                                 ),
                                 dailyTotalExpense =
-                                dailyExpense.dailyTotalExpense.plus(userInput.toDouble()).doubleOrZero()
+                                dailyExpense.dailyTotalExpense.plus(userInput.toDouble())
+                                    .doubleOrZero(),
+                                dailyTotalIncome = dailyExpense.dailyTotalIncome
                             )
                         }
                     } ?: run {
-                        expensesViewModel.addDailyExpense(
+                        expensesScreenViewModel.addDailyExpense(
                             expenseAmount = userInput.toDouble(),
-                            selectedCategory = selectedCategory
+                            selectedCategory = selectedCategory,
+                            incomeAmount = 0.0
                         )
                     }
                 },
@@ -145,27 +148,31 @@ fun AddExpenseScreen(
                 onClick = {
                     dailyExpense?.let { expense ->
                         if (expense.date != getLocalDateAsString()) {
-                            expensesViewModel.addDailyIncome(
+                            expensesScreenViewModel.addDailyExpense(
                                 incomeAmount = userInput.toDouble(),
-                                selectedCategory = selectedCategory
+                                selectedCategory = selectedCategory,
+                                expenseAmount = 0.0
                             )
                         } else {
-                            expensesViewModel.updateIncomeList(
-                                incomeDetailList = expense.incomeDetailList?.incomeDetail?.plus(
-                                    IncomeDetail(
+                            expensesScreenViewModel.updateExpenseList(
+                                expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
+                                    ExpenseDetail(
                                         price = userInput.toDouble(),
                                         category = selectedCategory,
                                         isIncome = true
                                     )
                                 ),
+                                dailyTotalExpense = dailyExpense.dailyTotalExpense,
                                 dailyTotalIncome =
-                                dailyExpense.dailyTotalIncome.plus(userInput.toDouble()).doubleOrZero()
+                                dailyExpense.dailyTotalIncome.plus(userInput.toDouble())
+                                    .doubleOrZero()
                             )
                         }
                     } ?: run {
-                        expensesViewModel.addDailyIncome(
+                        expensesScreenViewModel.addDailyExpense(
                             incomeAmount = userInput.toDouble(),
-                            selectedCategory = selectedCategory
+                            selectedCategory = selectedCategory,
+                            expenseAmount = 0.0
                         )
                     }
                 },

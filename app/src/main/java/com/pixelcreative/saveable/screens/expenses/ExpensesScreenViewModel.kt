@@ -6,8 +6,6 @@ import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
-import com.pixelcreative.saveable.domain.model.IncomeDetail
-import com.pixelcreative.saveable.domain.model.IncomeDetailList
 import com.pixelcreative.saveable.domain.repository.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,15 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ExpensesViewModel @Inject constructor(
+class ExpensesScreenViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository
 ) : ViewModel() {
-
-    private val initialExpense = Expense(
-        date = null,
-        expenseDetailList = null,
-        incomeDetailList = null
-    )
 
     private val _dailyExpense = MutableStateFlow<Expense?>(null)
 
@@ -44,30 +36,26 @@ class ExpensesViewModel @Inject constructor(
 
     fun updateExpenseList(
         expenseDetail: List<ExpenseDetail>?,
-        dailyTotalExpense: Double
+        dailyTotalExpense: Double,
+        dailyTotalIncome: Double
     ) = viewModelScope.launch {
 
         val expenseDetailList = ExpenseDetailList(
             expenseDetail = expenseDetail
         )
-        expenseRepository.updateDailyExpenseList(expenseDetailList, getLocalDateAsString(), dailyTotalExpense)
-    }
-
-    fun updateIncomeList(
-        incomeDetailList: List<IncomeDetail>?,
-        dailyTotalIncome: Double
-    ) = viewModelScope.launch {
-        val incomeDetailList = IncomeDetailList(
-            incomeDetail = incomeDetailList
-        )
-        expenseRepository.updateDailyIncomeList(
-            incomeDetailList,
+        expenseRepository.updateDailyExpenseList(
+            expenseDetailList,
             getLocalDateAsString(),
+            dailyTotalExpense,
             dailyTotalIncome
         )
     }
 
-    fun addDailyExpense(expenseAmount: Double, selectedCategory: String) = viewModelScope.launch {
+    fun addDailyExpense(
+        expenseAmount: Double,
+        selectedCategory: String,
+        incomeAmount: Double
+    ) = viewModelScope.launch {
         val expense = Expense(
             date = getLocalDateAsString(),
             expenseDetailList = ExpenseDetailList(
@@ -80,27 +68,7 @@ class ExpensesViewModel @Inject constructor(
                 ),
             ),
             dailyTotalExpense = expenseAmount,
-            dailyTotalIncome = 0.0,
-            incomeDetailList = IncomeDetailList(emptyList())
-        )
-        expenseRepository.addExpenseToRoom(expense)
-    }
-
-    fun addDailyIncome(incomeAmount: Double, selectedCategory: String) = viewModelScope.launch {
-        val expense = Expense(
-            date = getLocalDateAsString(),
-            incomeDetailList = IncomeDetailList(
-                incomeDetail = listOf(
-                    IncomeDetail(
-                        price = incomeAmount,
-                        category = selectedCategory,
-                        isIncome = true
-                    )
-                ),
-            ),
-            dailyTotalExpense = 0.0,
-            dailyTotalIncome = 0.0,
-            expenseDetailList = ExpenseDetailList(emptyList()),
+            dailyTotalIncome = incomeAmount
         )
         expenseRepository.addExpenseToRoom(expense)
     }

@@ -1,5 +1,6 @@
 package com.pixelcreative.saveable.core
 
+import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -16,4 +17,9 @@ fun getLocalDateAsString(): String {
 
 fun String?.orNone(): String {
     return this ?: "-"
+}
+
+fun Double?.formatDoubleToString(): String {
+    val decimalFormat = DecimalFormat("#.##")
+    return decimalFormat.format(this ?: 0.0)
 }

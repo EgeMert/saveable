@@ -3,7 +3,6 @@ package com.pixelcreative.saveable.data.repository
 import com.pixelcreative.saveable.data.dao.ExpenseDao
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetailList
-import com.pixelcreative.saveable.domain.model.IncomeDetailList
 import com.pixelcreative.saveable.domain.repository.ExpenseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,18 +42,10 @@ class ExpenseRepositoryImpl(
     override suspend fun updateDailyExpenseList(
         expenseDetailList: ExpenseDetailList,
         date: String,
-        dailyTotalExpense: Double
-    ) = withContext(Dispatchers.IO) {
-        expenseDao.updateExpenseList(expenseDetailList, date, dailyTotalExpense)
-    }
-
-    override suspend fun updateDailyIncomeList(
-        incomeDetailList: IncomeDetailList,
-        date: String,
+        dailyTotalExpense: Double,
         dailyTotalIncome: Double
-    ) =
-        withContext(Dispatchers.IO) {
-            expenseDao.updateDailyIncomeList(incomeDetailList, date, dailyTotalIncome)
-        }
+    ) = withContext(Dispatchers.IO) {
+        expenseDao.updateExpenseList(expenseDetailList, date, dailyTotalExpense, dailyTotalIncome)
+    }
 
 }

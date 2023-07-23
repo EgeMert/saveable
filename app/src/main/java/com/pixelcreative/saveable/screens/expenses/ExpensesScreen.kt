@@ -17,6 +17,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +30,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.DailyLimitCard
 import com.pixelcreative.saveable.components.SummaryCard
 import com.pixelcreative.saveable.components.TotalBalanceCard
+import com.pixelcreative.saveable.core.doubleOrZero
+import com.pixelcreative.saveable.core.formatDoubleToString
 import com.pixelcreative.saveable.core.getLocalDateAsString
+import com.pixelcreative.saveable.domain.model.Expense
+import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.ui.theme.BlackHtun
 import com.pixelcreative.saveable.ui.theme.BluishPurple
@@ -43,11 +50,13 @@ import com.pixelcreative.saveable.ui.theme.ZimaBlue
 fun ExpensesScreen(
     router: Router
 ) {
-    val expensesViewModel: ExpensesViewModel = hiltViewModel()
+    val expensesScreenViewModel: ExpensesScreenViewModel = hiltViewModel()
 
-    expensesViewModel.getDailyExpense(getLocalDateAsString())
+    expensesScreenViewModel.getDailyExpense(getLocalDateAsString())
 
-    val dailyExpense = expensesViewModel.dailyExpense.collectAsState().value
+    val dailyExpense = expensesScreenViewModel.dailyExpense.collectAsState().value
+
+    val dailyLimit by rememberSaveable { mutableDoubleStateOf(500.00) }
 
     Column(
         modifier = Modifier
@@ -65,9 +74,13 @@ fun ExpensesScreen(
                         .fillMaxHeight()
                         .weight(1.6f),
                     colors = listOf(ZimaBlue, BluishPurple),
-                    totalBalance = "$ 23,970.30",
-                    monthlyIncome = "$ 5,235.25",
-                    monthlyExpense = "$ 3,710.80"
+                    totalBalance = (dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
+                        dailyExpense?.dailyTotalExpense.doubleOrZero()
+                    )).formatDoubleToString(),
+                    monthlyIncome = dailyExpense?.dailyTotalIncome.doubleOrZero()
+                        .formatDoubleToString(),
+                    monthlyExpense = dailyExpense?.dailyTotalExpense.doubleOrZero()
+                        .formatDoubleToString()
                 )
 
                 Column(
@@ -82,7 +95,7 @@ fun ExpensesScreen(
                             .fillMaxWidth(),
                         colors = listOf(InvasiveIndigo, MediumSpringGreen),
                         title = "Daily limit:",
-                        limit = "$ 500"
+                        limit = "$ " + dailyLimit.formatDoubleToString()
                     )
 
                     DailyLimitCard(
@@ -92,7 +105,11 @@ fun ExpensesScreen(
                             .padding(top = 12.dp),
                         colors = listOf(RadicalRed, BonusLevel),
                         title = "Remaining limit:",
-                        limit = "$ 150"
+                        limit = "$ " + dailyLimit.plus(
+                            (dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
+                                dailyExpense?.dailyTotalExpense.doubleOrZero()
+                            ))
+                        ).formatDoubleToString()
                     )
                 }
             }
@@ -102,7 +119,7 @@ fun ExpensesScreen(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 20.dp)
                 .weight(3.7f),
-            latestExpense = dailyExpense
+            recentExpense = getRecentExpense(dailyExpense)
         )
 
         Row(
@@ -154,5 +171,13 @@ fun ExpensesScreen(
                 )
             }
         }
+    }
+}
+
+fun getRecentExpense(dailyExpense: Expense?): List<ExpenseDetail>? {
+    return dailyExpense?.let { latestExpense ->
+        latestExpense.expenseDetailList?.expenseDetail?.takeLast(4).let { detail ->
+            detail?.takeLast(minOf(4, detail.size))
+        }?.reversed()
     }
 }
