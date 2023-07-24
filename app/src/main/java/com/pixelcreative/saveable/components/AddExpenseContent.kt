@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices.NEXUS_5
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pixelcreative.saveable.ui.theme.BluishPurple
@@ -44,11 +46,12 @@ import com.pixelcreative.saveable.ui.theme.ZimaBlue
 @Composable
 fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
     val desiredHeight = LocalConfiguration.current.screenHeightDp
-    Column(modifier = Modifier.size((desiredHeight / 1.3).dp)) {
+    Column(modifier = Modifier.height(540.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            horizontalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
@@ -61,24 +64,24 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
                                 OrangeCrush
                             )
                         )
-                    )
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(
                         text = "Bill",
                         modifier = Modifier
-                            .fillMaxWidth()
                             .padding(vertical = 10.dp),
-                        textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.body1,
                         color = White
                     )
                     Text(
                         text = selectedBillType,
                         modifier = Modifier
-                            .fillMaxWidth()
                             .padding(bottom = 10.dp),
-                        textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.body1,
                         color = White
                     )
@@ -96,11 +99,14 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
                         )
                     )
             ) {
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(
                         text = "Category",
                         modifier = Modifier
-                            .fillMaxWidth()
+
                             .padding(vertical = 10.dp),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.body1,
@@ -109,7 +115,6 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
                     Text(
                         text = selectedCategory,
                         modifier = Modifier
-                            .fillMaxWidth()
                             .padding(bottom = 10.dp),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.body1,
@@ -156,7 +161,7 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
         }
         Row(
             modifier = Modifier
-                .weight(5f)
+                .weight(4f)
                 .fillMaxHeight()
         ) {
             val numberList = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ",", "0")
@@ -171,7 +176,7 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
                         modifier = Modifier
                             .background(Color.White)
                             .border(width = 0.3.dp, color = Color.Black)
-                            .size(92.dp),
+                            .size(75.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -260,15 +265,14 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(BluishPurple)
-                .weight(0.9f), contentAlignment = Alignment.Center
+                .weight(0.5f), contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "Sunday, 23 - July - 2023",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
+                    .fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.subtitle2,
                 color = White
             )
         }
@@ -277,7 +281,7 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
 
 }
 
-@Preview
+@Preview(device = "id:pixel_7_pro")
 @Composable
 fun AddExpenseContentPreview() {
     AddExpenseContent("Cash", "Shopping")
