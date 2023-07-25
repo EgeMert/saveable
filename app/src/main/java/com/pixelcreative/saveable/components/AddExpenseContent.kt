@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -161,33 +162,59 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
         }
         Row(
             modifier = Modifier
-                .weight(4f)
                 .fillMaxHeight()
+                .weight(3.78f)
         ) {
-            val numberList = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ",", "0")
+            val numberList = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ",", "0","okay")
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 modifier = Modifier
-                    .fillMaxHeight()
                     .weight(3f)
+                    .fillMaxHeight()
+
             ) {
-                items(numberList) { number ->
-                    Box(
-                        modifier = Modifier
-                            .background(Color.White)
-                            .border(width = 0.3.dp, color = Color.Black)
-                            .size(75.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = number,
+                itemsIndexed(numberList) {index, items ->
+                    if (items.contains("okay")){
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.body1,
-                            color = Color.Black
-                        )
+                                .border(width = 0.3.dp, color = Color.Black)
+                                .size(70.dp)
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            DarkPurple,
+                                            RougeRed,
+                                            OrangeCrush
+                                        )
+                                    )
+                                ), contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = null,
+                                modifier = Modifier,
+                                tint = White
+                            )
+                        }
+                    }else{
+                        Box(
+                            modifier = Modifier
+                                .background(Color.White)
+                                .border(width = 0.3.dp, color = Color.Black)
+                                .size(70.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = items,
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.body1,
+                                color = Color.Black
+                            )
+                        }
                     }
+
                 }
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -231,29 +258,6 @@ fun AddExpenseContent(selectedBillType: String, selectedCategory: String) {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.DateRange,
-                        contentDescription = null,
-                        modifier = Modifier,
-                        tint = White
-                    )
-                }
-                Divider(Modifier.fillMaxWidth(), color = White)
-                Box(
-                    modifier = Modifier
-                        .height(70.dp)
-                        .fillMaxWidth()
-                        .weight(1.3f)
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    DarkPurple,
-                                    RougeRed,
-                                    OrangeCrush
-                                )
-                            )
-                        ), contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
                         contentDescription = null,
                         modifier = Modifier,
                         tint = White
