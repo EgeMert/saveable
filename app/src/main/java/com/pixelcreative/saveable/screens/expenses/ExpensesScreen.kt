@@ -25,6 +25,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -37,8 +38,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.AddExpenseContent
 import com.pixelcreative.saveable.components.DailyLimitCard
+import com.pixelcreative.saveable.components.SpendType
 import com.pixelcreative.saveable.components.SummaryCard
 import com.pixelcreative.saveable.components.TotalBalanceCard
 import com.pixelcreative.saveable.core.doubleOrZero
@@ -89,14 +94,14 @@ fun ExpensesScreen(
     val sheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+
+    var spendingType by remember { mutableStateOf(SpendType.None) }
+
     ModalBottomSheetLayout(
         modifier = Modifier.navigationBarsPadding(),
         scrimColor = Color.Black.copy(alpha = 0.3f),
         sheetContent = {
-            AddExpenseContent(
-                selectedBillType = "Card",
-                selectedCategory = "Shopping"
-            )
+            AddExpenseContent(spendType = spendingType)
         },
         sheetState = sheetState
     ) {
@@ -173,7 +178,9 @@ fun ExpensesScreen(
                     modifier = Modifier
                         .clickable {
                             scope.launch {
+                                spendingType = SpendType.Expense
                                 sheetState.show()
+
                             }
                         }
                         .clip(RoundedCornerShape(8.dp))
@@ -201,8 +208,8 @@ fun ExpensesScreen(
                     modifier = Modifier
                         .clickable {
                             scope.launch {
+                                spendingType = SpendType.Income
                                 sheetState.show()
-
                             }
                         }
                         .clip(RoundedCornerShape(8.dp))
@@ -234,10 +241,4 @@ fun getRecentExpense(dailyExpense: Expense?): List<ExpenseDetail>? {
             detail?.takeLast(minOf(4, detail.size))
         }?.reversed()
     }
-}
-
-@Preview
-@Composable
-fun AddExpenseContentPreview() {
-    AddExpenseContent("Cash", "Shopping")
 }
