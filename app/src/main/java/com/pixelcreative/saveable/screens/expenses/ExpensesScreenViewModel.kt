@@ -20,18 +20,18 @@ class ExpensesScreenViewModel @Inject constructor(
 
     private val _dailyExpense = MutableStateFlow<Expense?>(null)
 
-    private val _latestExpense = MutableStateFlow<Expense?>(null)
+    private val _monthlyExpense = MutableStateFlow<List<Expense>?>(null)
 
     val dailyExpense: StateFlow<Expense?> get() = _dailyExpense
 
-    val latestExpense: StateFlow<Expense?> get() = _latestExpense
-
-    fun getLatestExpense() = viewModelScope.launch {
-        _latestExpense.value = expenseRepository.getLatestExpense()
-    }
+    val monthlyExpense: StateFlow<List<Expense>?> get() = _monthlyExpense
 
     fun getDailyExpense(date: String) = viewModelScope.launch {
         _dailyExpense.value = expenseRepository.getDailyExpense(date)
+    }
+
+    fun getMonthlyExpense(monthAndYear: String) = viewModelScope.launch {
+        _monthlyExpense.value = expenseRepository.getMonthlyExpense(monthAndYear)
     }
 
     fun updateExpenseList(

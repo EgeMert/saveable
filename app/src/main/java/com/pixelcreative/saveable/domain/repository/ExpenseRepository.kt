@@ -20,6 +20,8 @@ interface ExpenseRepository {
 
     suspend fun getDailyExpense(date: String): Expense?
 
+    suspend fun getMonthlyExpense(monthAndYear: String): List<Expense>?
+
     suspend fun getLatestExpense(): Expense?
 
     suspend fun updateDailyExpenseList(
