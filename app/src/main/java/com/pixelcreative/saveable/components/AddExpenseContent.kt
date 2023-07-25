@@ -46,7 +46,6 @@ import com.pixelcreative.saveable.ui.theme.RougeRed
 import com.pixelcreative.saveable.ui.theme.White
 import com.pixelcreative.saveable.ui.theme.ZimaBlue
 
-
 @Composable
 fun AddExpenseContent(spendType: SpendType) {
     var selectedBillType by remember { mutableStateOf("") }

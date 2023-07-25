@@ -10,29 +10,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -48,9 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,18 +47,18 @@ import com.pixelcreative.saveable.components.TotalBalanceCard
 import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.formatDoubleToString
 import com.pixelcreative.saveable.core.getLocalDateAsString
+import com.pixelcreative.saveable.core.getMonthAndYearAsString
+import com.pixelcreative.saveable.core.getMonthlyExpenseTotal
+import com.pixelcreative.saveable.core.getMonthlyIncomeTotal
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.ui.theme.BlackHtun
 import com.pixelcreative.saveable.ui.theme.BluishPurple
 import com.pixelcreative.saveable.ui.theme.BonusLevel
-import com.pixelcreative.saveable.ui.theme.DarkPurple
 import com.pixelcreative.saveable.ui.theme.InvasiveIndigo
 import com.pixelcreative.saveable.ui.theme.MediumSpringGreen
-import com.pixelcreative.saveable.ui.theme.OrangeCrush
 import com.pixelcreative.saveable.ui.theme.RadicalRed
-import com.pixelcreative.saveable.ui.theme.RougeRed
 import com.pixelcreative.saveable.ui.theme.White
 import com.pixelcreative.saveable.ui.theme.ZimaBlue
 import kotlinx.coroutines.launch
@@ -88,9 +72,14 @@ fun ExpensesScreen(
 
     expensesScreenViewModel.getDailyExpense(getLocalDateAsString())
 
+    expensesScreenViewModel.getMonthlyExpense(getMonthAndYearAsString())
+
     val dailyExpense = expensesScreenViewModel.dailyExpense.collectAsState().value
 
+    val monthlyExpense = expensesScreenViewModel.monthlyExpense.collectAsState().value
+
     val dailyLimit by rememberSaveable { mutableDoubleStateOf(500.00) }
+
     val sheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
@@ -121,13 +110,9 @@ fun ExpensesScreen(
                             .fillMaxHeight()
                             .weight(1.6f),
                         colors = listOf(ZimaBlue, BluishPurple),
-                        totalBalance = (dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
-                            dailyExpense?.dailyTotalExpense.doubleOrZero()
-                        )).formatDoubleToString(),
-                        monthlyIncome = dailyExpense?.dailyTotalIncome.doubleOrZero()
-                            .formatDoubleToString(),
-                        monthlyExpense = dailyExpense?.dailyTotalExpense.doubleOrZero()
-                            .formatDoubleToString()
+                        totalBalance = getMonthlyIncomeTotal(monthlyExpense).minus(getMonthlyExpenseTotal(monthlyExpense)).formatDoubleToString(),
+                        monthlyIncome = getMonthlyIncomeTotal(monthlyExpense).formatDoubleToString(),
+                        monthlyExpense = getMonthlyExpenseTotal(monthlyExpense).formatDoubleToString()
                     )
 
                     Column(
