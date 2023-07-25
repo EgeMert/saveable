@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pixelcreative.saveable.core.doubleOrZero
+import com.pixelcreative.saveable.core.formatDoubleToString
 import com.pixelcreative.saveable.core.getImageFromLabel
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.ui.theme.Emerald
@@ -54,7 +55,7 @@ fun ExpenseDetailListView(
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = "$sign$${abs(detail.price.doubleOrZero())}",
+                        text = "$sign$${abs(detail.price.doubleOrZero()).formatDoubleToString()}",
                         color = if (detail.isIncome == true) {
                             Emerald
                         } else {
