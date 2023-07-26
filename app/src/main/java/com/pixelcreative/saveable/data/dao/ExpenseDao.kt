@@ -45,4 +45,7 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM $EXPENSE_TABLE WHERE strftime('%m-%Y', date) = :monthAndYear")
     fun getMonthlyExpense(monthAndYear: String): List<Expense>?
+
+    @Query("SELECT * FROM $EXPENSE_TABLE WHERE date LIKE :year || '%'")
+    fun getYearlyExpenses(year: String): List<Expense>
 }

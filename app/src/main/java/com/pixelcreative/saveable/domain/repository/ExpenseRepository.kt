@@ -22,6 +22,8 @@ interface ExpenseRepository {
 
     suspend fun getMonthlyExpense(monthAndYear: String): List<Expense>?
 
+    suspend fun getYearlyExpense(year: String): List<Expense>?
+
     suspend fun getLatestExpense(): Expense?
 
     suspend fun updateDailyExpenseList(

@@ -25,6 +25,11 @@ fun getMonthAndYearAsString(currentDate:LocalDate = LocalDate.now()): String {
     return currentDate.format(dateFormatter)
 }
 
+fun getYearAsString(currentDate:LocalDate = LocalDate.now()): String {
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyy")
+    return currentDate.format(dateFormatter)
+}
+
 fun String?.orNone(): String {
     return this ?: "-"
 }

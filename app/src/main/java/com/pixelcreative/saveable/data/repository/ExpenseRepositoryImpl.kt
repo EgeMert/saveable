@@ -40,6 +40,11 @@ class ExpenseRepositoryImpl(
             expenseDao.getMonthlyExpense(monthAndYear)
         }
 
+    override suspend fun getYearlyExpense(year: String) =
+        withContext(Dispatchers.IO) {
+            expenseDao.getYearlyExpenses(year)
+        }
+
     override suspend fun getLatestExpense() = withContext(Dispatchers.IO) {
         expenseDao.getLatestExpense()
     }

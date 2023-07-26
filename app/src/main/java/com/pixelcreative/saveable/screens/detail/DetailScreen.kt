@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.pixelcreative.saveable.components.DailyExpensesAnalysis
 import com.pixelcreative.saveable.components.MonthlyExpenseAnalysis
+import com.pixelcreative.saveable.components.YearlyExpenseAnalysis
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.ui.theme.BlackHtun
 import com.pixelcreative.saveable.ui.theme.BluishPurple
@@ -71,7 +72,10 @@ fun DetailScreen(
                 1 -> item {
                     MonthlyExpenseAnalysis()
                 }
-                2 -> item { Text("Sekme 3 içeriği") }
+
+                2 -> item {
+                    YearlyExpenseAnalysis()
+                }
             }
         }
     }
