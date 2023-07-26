@@ -1,5 +1,6 @@
 package com.pixelcreative.saveable.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,7 +29,8 @@ fun SummaryCard_Preview() {
                 category = "Food",
                 isIncome = false
             )
-        )
+        ),
+        onSeeAllClicked = { }
     )
 }
 
@@ -36,14 +38,16 @@ fun SummaryCard_Preview() {
 @Composable
 fun SummaryCard_Preview2() {
     SummaryCard(
-        recentExpense = null
+        recentExpense = null,
+        onSeeAllClicked = { }
     )
 }
 
 @Composable
 fun SummaryCard(
     modifier: Modifier = Modifier,
-    recentExpense: List<ExpenseDetail>?
+    recentExpense: List<ExpenseDetail>?,
+    onSeeAllClicked:() -> Unit
 ) {
 
     Column(
@@ -65,7 +69,10 @@ fun SummaryCard(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .padding(top = 8.dp)
+                    .clickable {
+                        onSeeAllClicked.invoke()
+                    },
                 text = "See All",
                 color = Pinball,
                 style = MaterialTheme.typography.subtitle1,

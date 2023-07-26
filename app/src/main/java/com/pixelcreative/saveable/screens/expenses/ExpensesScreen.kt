@@ -157,7 +157,11 @@ fun ExpensesScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 20.dp)
                     .weight(3.7f),
-                recentExpense = getRecentExpense(dailyExpense)
+                recentExpense = getRecentExpense(dailyExpense),
+                onSeeAllClicked = {
+                    router.goToDetailScreen()
+                    //Burda gidiyor fakat tekrar anasayfaya basınca anasayfaya dönmüyor sadece backpress yapınca dönüyor
+                }
             )
 
             Row(
