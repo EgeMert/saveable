@@ -1,5 +1,8 @@
 package com.pixelcreative.saveable.navigation.bottomnavigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -15,32 +18,39 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelcreative.saveable.ui.theme.BondyBlue
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
-    BottomNavigation {
-        val backStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = backStackEntry?.destination?.route
-        NavBarItems.BarItems.forEach { navItem ->
-            BottomNavigationItem(
-                selected = currentRoute == navItem.route,
-                modifier = Modifier.background(MaterialTheme.colors.background),
-                selectedContentColor = BondyBlue,
-                unselectedContentColor = Color.White,
-                onClick = {
-                    navController.navigate(navItem.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+fun BottomNavigationBar(navController: NavHostController, bottomBarState: Boolean) {
+    AnimatedVisibility(
+        visible = bottomBarState,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it }),
+    ) {
+        BottomNavigation {
+            val backStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = backStackEntry?.destination?.route
+            NavBarItems.BarItems.forEach { navItem ->
+                BottomNavigationItem(
+                    selected = currentRoute == navItem.route,
+                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    selectedContentColor = BondyBlue,
+                    unselectedContentColor = Color.White,
+                    onClick = {
+                        navController.navigate(navItem.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = navItem.image,
+                            contentDescription = null
+                        )
                     }
-                },
-                icon = {
-                    Icon(
-                        imageVector = navItem.image,
-                        contentDescription = null
-                    )
-                }
-            )
+                )
+            }
         }
     }
+
 }

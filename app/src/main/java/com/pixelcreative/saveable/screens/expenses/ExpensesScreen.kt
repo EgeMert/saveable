@@ -17,11 +17,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -36,10 +36,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pixelcreative.saveable.components.AddExpenseContent
+import com.pixelcreative.saveable.components.AddExpenseBottomSheet
 import com.pixelcreative.saveable.components.DailyLimitCard
 import com.pixelcreative.saveable.components.SpendType
 import com.pixelcreative.saveable.components.SummaryCard
@@ -66,7 +65,8 @@ import kotlinx.coroutines.launch
 @Composable
 @ExperimentalMaterialApi
 fun ExpensesScreen(
-    router: Router
+    router: Router,
+    hideBottomSheet: (Boolean) -> Unit
 ) {
     val expensesScreenViewModel: ExpensesScreenViewModel = hiltViewModel()
 
@@ -85,12 +85,16 @@ fun ExpensesScreen(
     val scope = rememberCoroutineScope()
 
     var spendingType by remember { mutableStateOf(SpendType.None) }
-
+    LaunchedEffect(sheetState.currentValue) {
+        if (sheetState.currentValue == ModalBottomSheetValue.Hidden) {
+            hideBottomSheet.invoke(true)
+        }
+    }
     ModalBottomSheetLayout(
         modifier = Modifier.navigationBarsPadding(),
         scrimColor = Color.Black.copy(alpha = 0.3f),
         sheetContent = {
-            AddExpenseContent(spendType = spendingType)
+            AddExpenseBottomSheet(spendType = spendingType)
         },
         sheetState = sheetState
     ) {
@@ -110,7 +114,9 @@ fun ExpensesScreen(
                             .fillMaxHeight()
                             .weight(1.6f),
                         colors = listOf(ZimaBlue, BluishPurple),
-                        totalBalance = getMonthlyIncomeTotal(monthlyExpense).minus(getMonthlyExpenseTotal(monthlyExpense)).formatDoubleToString(),
+                        totalBalance = getMonthlyIncomeTotal(monthlyExpense).minus(
+                            getMonthlyExpenseTotal(monthlyExpense)
+                        ).formatDoubleToString(),
                         monthlyIncome = getMonthlyIncomeTotal(monthlyExpense).formatDoubleToString(),
                         monthlyExpense = getMonthlyExpenseTotal(monthlyExpense).formatDoubleToString()
                     )
@@ -163,6 +169,7 @@ fun ExpensesScreen(
                     modifier = Modifier
                         .clickable {
                             scope.launch {
+                                hideBottomSheet.invoke(false)
                                 spendingType = SpendType.Expense
                                 sheetState.show()
 
@@ -193,6 +200,7 @@ fun ExpensesScreen(
                     modifier = Modifier
                         .clickable {
                             scope.launch {
+                                hideBottomSheet.invoke(false)
                                 spendingType = SpendType.Income
                                 sheetState.show()
                             }

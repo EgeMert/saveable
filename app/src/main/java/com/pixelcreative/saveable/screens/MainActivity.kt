@@ -11,9 +11,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.SystemUiController
@@ -36,27 +38,38 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val systemUiController: SystemUiController = rememberSystemUiController()
-            DisposableEffect(systemUiController){
+            DisposableEffect(systemUiController) {
                 systemUiController.setStatusBarColor(BluishPurple)
                 systemUiController.setSystemBarsColor(BluishPurple)
-                onDispose {  }
+                onDispose { }
             }
 
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val route = navBackStackEntry?.destination?.route ?: Screens.SplashScreen.route
             val router: Router = remember { RouterImplementation(navController, route) }
+            var canShowBottomSheet by rememberSaveable { mutableStateOf(false) }
+
             SaveableTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
                     Scaffold(bottomBar = {
-                        if (route != Screens.SplashScreen.route ){
-                            BottomNavigationBar(navController = navController)
+
+                        if (route != Screens.SplashScreen.route) {
+                            BottomNavigationBar(
+                                navController = navController,
+                                bottomBarState = canShowBottomSheet
+                            )
                         }
                     }, content = {
-                        SaveableNavGraph(navController = navController, router = router)
+                        SaveableNavGraph(
+                            navController = navController,
+                            router = router,
+                            hideBottomSheet = {
+                                canShowBottomSheet = it
+                            })
                     })
                 }
             }

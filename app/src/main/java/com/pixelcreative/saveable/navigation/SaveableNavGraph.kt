@@ -18,6 +18,7 @@ fun SaveableNavGraph(
     navController: NavHostController,
     router: Router,
     startDestination: String = Screens.SplashScreen.route,
+    hideBottomSheet:(Boolean)->Unit = {},
     navGraphBuilder: NavGraphBuilder.() -> Unit = {},
 ) {
     NavHost(
@@ -27,12 +28,13 @@ fun SaveableNavGraph(
 //        popExitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start) }
     ) {
         navGraphBuilder.invoke(this)
-        mainNavigation(router)
+        mainNavigation(router, hideBottomSheet)
     }
 }
 @OptIn(ExperimentalMaterialApi::class)
 private fun NavGraphBuilder.mainNavigation(
-    router: Router
+    router: Router,
+    hideBottomSheet:(Boolean)->Unit = {},
 ){
     composable(
         route = Screens.SplashScreen.route
@@ -59,7 +61,7 @@ private fun NavGraphBuilder.mainNavigation(
     composable(
         route = Screens.ExpenseScreen.route,
     ){
-        ExpensesScreen(router = router )
+        ExpensesScreen(router = router ,  hideBottomSheet)
     }
     composable(
         route = Screens.DetailScreen.route,
