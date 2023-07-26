@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.pixelcreative.saveable.screens.chart.ChartScreen
 import com.pixelcreative.saveable.screens.addexpense.AddExpenseScreen
 import com.pixelcreative.saveable.screens.detail.DetailScreen
 import com.pixelcreative.saveable.screens.expenses.ExpensesScreen
@@ -58,15 +59,23 @@ private fun NavGraphBuilder.mainNavigation(
         val message = navBackStackEntry.arguments?.getString("message") ?: ""
        // MessageScreen(router = router, message = message)
     }
+
     composable(
         route = Screens.ExpenseScreen.route,
     ){
         ExpensesScreen(router = router ,  hideBottomSheet)
     }
+
     composable(
         route = Screens.DetailScreen.route,
     ){
         DetailScreen(router = router )
+    }
+
+    composable(
+        route = Screens.ChartScreen.route,
+    ){
+        ChartScreen(router = router )
     }
 
     composable(

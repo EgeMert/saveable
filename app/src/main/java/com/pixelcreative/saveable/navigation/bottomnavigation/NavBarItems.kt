@@ -25,7 +25,7 @@ object NavBarItems {
         ),
         BottomBarItem(
             image = Icons.Filled.List,
-            route = Screens.Home.route
+            route = Screens.ChartScreen.route
         ),
         BottomBarItem(
             image = Icons.Filled.MoreVert,

@@ -77,6 +77,10 @@ class RouterImplementation(
         navigate(Screens.ExpenseScreen)
     }
 
+    override fun goToChartScreen() {
+        navigate(Screens.ChartScreen)
+    }
+
     override fun goToAddExpenseScreen() {
         navigate(Screens.AddExpenseScreen)
     }

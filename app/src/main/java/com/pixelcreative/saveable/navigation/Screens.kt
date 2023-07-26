@@ -8,6 +8,8 @@ sealed class Screens(
     object DetailScreen : Screens(route = Path.DETAIL_SCREEN.path)
     object ExpenseScreen : Screens(route = Path.EXPENSE_SCREEN.path)
     object AddExpenseScreen : Screens(route = Path.ADD_EXPENSE_SCREEN.path)
+
+    object ChartScreen : Screens(route = Path.CHART_SCREEN.path)
     object MessageScreen : Screens(route = Path.MESSAGE_SCREEN.path){
         fun passMessage(message:String):String{
             return "MESSAGE_SCREEN/$message"
@@ -21,6 +23,7 @@ object Routes {
     const val DETAIL_SCREEN = "DETAIL_SCREEN"
     const val EXPENSE_SCREEN = "EXPENSE_SCREEN"
     const val ADD_EXPENSE_SCREEN = "ADD_EXPENSE_SCREEN"
+    const val CHART_SCREEN = "CHART_SCREEN"
 }
 enum class Path(
     val path: String,
@@ -31,5 +34,6 @@ enum class Path(
     MESSAGE_SCREEN(path = Routes.MESSAGE_SCREEN),
     DETAIL_SCREEN(path = Routes.DETAIL_SCREEN),
     ADD_EXPENSE_SCREEN(path = Routes.ADD_EXPENSE_SCREEN),
+    CHART_SCREEN(path = Routes.CHART_SCREEN),
     SPLASH(path = Routes.SPLASH),
 }
