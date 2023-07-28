@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,8 +40,10 @@ import com.pixelcreative.saveable.ui.theme.EerieBlack
 import com.pixelcreative.saveable.ui.theme.Emerald
 import com.pixelcreative.saveable.ui.theme.InvasiveIndigo
 import com.pixelcreative.saveable.ui.theme.PhilippineGray
+import com.pixelcreative.saveable.ui.theme.Pinball
 import com.pixelcreative.saveable.ui.theme.RadicalRed
 import com.pixelcreative.saveable.ui.theme.RougeRed
+import com.pixelcreative.saveable.ui.theme.White
 import com.pixelcreative.saveable.ui.theme.ZimaBlue
 import com.pixelcreative.saveable.ui.theme.Zomp
 
@@ -148,26 +152,11 @@ fun DetailsPieChart(
     colors: List<Color>,
     totalSum: Double
 ) {
-    Column(
-        modifier = Modifier
-            .padding(top = 45.dp)
-            .fillMaxWidth()
-    ) {
-        // create the data items
-        data.values.forEachIndexed { index, value ->
-            DetailsPieChartItem(
-                data = Pair(data.keys.elementAt(index), value),
-                color = colors[index],
-                totalSum = totalSum
-            )
-        }
-    }
-
-    /*LazyVerticalGrid(
+    LazyVerticalGrid(
         modifier = Modifier
             .padding(top = 45.dp)
             .fillMaxWidth(),
-        columns = GridCells.Fixed(count = 3),
+        columns = GridCells.Fixed(count = 2),
         content = {
             itemsIndexed(data.values.toList()) { index, item ->
                 DetailsPieChartItem(
@@ -177,54 +166,48 @@ fun DetailsPieChart(
                 )
             }
         }
-    )*/
+    )
 }
 
 @Composable
 fun DetailsPieChartItem(
     data: Pair<String, Double>,
-    height: Dp = 24.dp,
     color: Color,
     totalSum: Double
 ) {
-
-    Surface(
+    Row(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(vertical = 10.dp, horizontal = 40.dp),
-        color = Color.Transparent
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier
+                .background(
+                    color = color,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .size(24.dp)
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp)
         ) {
-
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = color,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .size(height)
+            Text(
+                text = data.first,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                color = Pinball
             )
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    modifier = Modifier.padding(start = 15.dp),
-                    text = data.first,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp,
-                    color = Color.Black
-                )
-                Text(
-                    modifier = Modifier.padding(start = 15.dp),
-                    text = calculatePercentage(data.second, totalSum),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
-            }
-
+            Text(
+                text = calculatePercentage(data.second, totalSum),
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                color = White
+            )
         }
     }
 }
