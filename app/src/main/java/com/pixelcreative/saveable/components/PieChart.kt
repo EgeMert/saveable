@@ -49,6 +49,7 @@ import com.pixelcreative.saveable.ui.theme.Zomp
 
 @Composable
 fun PieChart(
+    modifier: Modifier = Modifier,
     data: Map<String, Double>,
     radiusOuter: Dp = 90.dp,
     chartBarWidth: Dp = 100.dp,
@@ -107,7 +108,7 @@ fun PieChart(
     }
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 

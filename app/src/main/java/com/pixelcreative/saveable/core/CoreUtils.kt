@@ -39,6 +39,18 @@ fun Double?.formatDoubleToString(): String {
     return decimalFormat.format(this ?: 0.0)
 }
 
+fun Float?.nonNullable(): Float {
+    return this ?: 0.0f
+}
+
+fun Double?.doubleToFloat(): Float {
+    return this?.toFloat() ?: 0.0f
+}
+
+fun String?.stringToFloat(): Float {
+    return this?.toFloat() ?: 0.0f
+}
+
 fun getExpenseSummaryByCategory(expenseList: List<Expense>?): List<ExpenseDetail> {
     val categoryMap = mutableMapOf<String, Double>()
     expenseList?.let {
@@ -109,4 +121,30 @@ fun getMonthlyExpenseTotal(expenses: List<Expense>?): Double {
         }
     }
     return expenseTotal
+}
+
+data class MonthlyTotalExpense(
+    val month: String,
+    val totalExpense: Double
+)
+
+fun calculateMonthlyTotalExpenses(expenseList: List<Expense>?): List<MonthlyTotalExpense> {
+    if (expenseList == null) {
+        return emptyList()
+    }
+
+    val monthlyTotalMap = mutableMapOf<Int, Double>()
+
+    for (expense in expenseList) {
+        val month = LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).monthValue
+
+        val currentTotal = monthlyTotalMap.getOrDefault(month, 0.0)
+        val expenseDetailTotal = expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
+
+        monthlyTotalMap[month] = currentTotal + expenseDetailTotal
+    }
+
+    return monthlyTotalMap.entries.map { (month, total) ->
+        MonthlyTotalExpense(month.toString(), total)
+    }
 }

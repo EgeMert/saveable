@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
@@ -25,7 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.BarGraph
 import com.pixelcreative.saveable.components.BarType
+import com.pixelcreative.saveable.components.MpBarChart
 import com.pixelcreative.saveable.components.PieChart
+import com.pixelcreative.saveable.core.calculateMonthlyTotalExpenses
 import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.getExpenseSummaryByCategory
 import com.pixelcreative.saveable.core.getLocalDateAsString
@@ -154,7 +157,9 @@ fun ChartScreen(
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
+                            MpBarChart(expenseDetails = calculateMonthlyTotalExpenses(it))
                             PieChart(
+                                modifier = Modifier.fillMaxWidth().padding(20.dp),
                                 data = convertToMap(getExpenseSummaryByCategory(it))
                             )
                         }
