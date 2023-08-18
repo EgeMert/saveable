@@ -81,8 +81,9 @@ fun ExpensesScreen(
     val dailyLimit by rememberSaveable { mutableDoubleStateOf(500.00) }
 
     val sheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,skipHalfExpanded = true)
     val scope = rememberCoroutineScope()
+    expensesScreenViewModel.getDailyExpense(getLocalDateAsString())
 
     var spendingType by remember { mutableStateOf(SpendType.None) }
     LaunchedEffect(sheetState.currentValue) {
@@ -94,7 +95,73 @@ fun ExpensesScreen(
         modifier = Modifier.navigationBarsPadding(),
         scrimColor = Color.Black.copy(alpha = 0.3f),
         sheetContent = {
-            AddExpenseBottomSheet(spendType = spendingType)
+            AddExpenseBottomSheet(spendType = spendingType){userInput, selectedCategory, selectedBillType->
+                if (spendingType == SpendType.Expense) {
+                    dailyExpense?.let { expense ->
+                        if (expense.date != getLocalDateAsString()) {
+                            expensesScreenViewModel.addDailyExpense(
+                                expenseAmount = userInput.toDouble(),
+                                selectedCategory = selectedCategory,
+                                incomeAmount = 0.0
+                            )
+                        } else {
+                            expensesScreenViewModel.updateExpenseList(
+                                expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
+                                    ExpenseDetail(
+                                        price = userInput.toDouble(),
+                                        category = selectedCategory,
+                                        isIncome = false
+                                    )
+                                ),
+                                dailyTotalExpense =
+                                dailyExpense.dailyTotalExpense.plus(userInput.toDouble())
+                                    .doubleOrZero(),
+                                dailyTotalIncome = dailyExpense.dailyTotalIncome
+                            )
+                        }
+                    } ?: run {
+                        expensesScreenViewModel.addDailyExpense(
+                            expenseAmount = userInput.toDouble(),
+                            selectedCategory = selectedCategory,
+                            incomeAmount = 0.0
+                        )
+                    }
+                }else{
+                    dailyExpense?.let { expense ->
+                        if (expense.date != getLocalDateAsString()) {
+                            expensesScreenViewModel.addDailyExpense(
+                                incomeAmount = userInput.toDouble(),
+                                selectedCategory = selectedCategory,
+                                expenseAmount = 0.0
+                            )
+                        } else {
+                            expensesScreenViewModel.updateExpenseList(
+                                expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
+                                    ExpenseDetail(
+                                        price = userInput.toDouble(),
+                                        category = selectedCategory,
+                                        isIncome = true
+                                    )
+                                ),
+                                dailyTotalExpense = dailyExpense.dailyTotalExpense,
+                                dailyTotalIncome =
+                                dailyExpense.dailyTotalIncome.plus(userInput.toDouble())
+                                    .doubleOrZero()
+                            )
+                        }
+                    } ?: run {
+                        expensesScreenViewModel.addDailyExpense(
+                            incomeAmount = userInput.toDouble(),
+                            selectedCategory = selectedCategory,
+                            expenseAmount = 0.0
+                        )
+                    }
+                }
+                scope.launch {
+                    sheetState.hide()
+
+                }
+            }
         },
         sheetState = sheetState
     ) {

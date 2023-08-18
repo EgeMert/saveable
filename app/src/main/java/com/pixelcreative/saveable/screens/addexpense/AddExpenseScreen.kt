@@ -175,6 +175,7 @@ fun AddExpenseScreen(
                             expenseAmount = 0.0
                         )
                     }
+
                 },
             ) {
                 Text(
