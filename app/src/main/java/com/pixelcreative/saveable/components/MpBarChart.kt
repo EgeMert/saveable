@@ -13,19 +13,20 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.pixelcreative.saveable.core.MonthlyTotalExpense
+import com.pixelcreative.saveable.core.TotalExpenseWithValue
 import com.pixelcreative.saveable.core.doubleToFloat
 import com.pixelcreative.saveable.ui.theme.BondyBlue
 import com.pixelcreative.saveable.ui.theme.White
 
 @Composable
 fun MpBarChart(
-    modifier: Modifier = Modifier,
-    expenseDetails: List<MonthlyTotalExpense>
+    expenseDetails: List<TotalExpenseWithValue>
 ) {
-    val categories = expenseDetails.map { it.month }
     AndroidView(
-        modifier = Modifier.height(240.dp).fillMaxWidth().padding(20.dp),
+        modifier = Modifier
+            .height(240.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 16.dp),
         factory = { context ->
             BarChart(context)
         },
@@ -44,8 +45,9 @@ fun MpBarChart(
             val barData = BarData(dataSet).apply {
 
             }
+
             barChart.apply {
-                xAxis.setValueFormatter(IndexAxisValueFormatter(expenseDetails.map { it.month }))
+                xAxis.setValueFormatter(IndexAxisValueFormatter(expenseDetails.map { it.value }))
                 description.isEnabled = false
                 xAxis.textColor = White.toArgb()
                 axisLeft.textColor = White.toArgb()

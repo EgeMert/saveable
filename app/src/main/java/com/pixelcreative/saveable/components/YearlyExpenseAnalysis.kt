@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.core.formatDoubleToString
@@ -60,9 +62,11 @@ fun YearlyExpenseAnalysis() {
         Text(
             modifier = Modifier
                 .padding(top = 20.dp),
-            text = "Yearly Categories ( ${getExpenseSummaryByCategory(yearlyExpense).size.or(0)} )",
+            text = "Yearly Categories ( ${getExpenseSummaryByCategory(yearlyExpense).size.or(0)} Categories )",
             color = Pinball,
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h6,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
         )
 
         Divider(
@@ -75,7 +79,8 @@ fun YearlyExpenseAnalysis() {
 
         ExpenseDetailListView(
             modifier = Modifier
-                .padding(vertical = 20.dp),
+                .navigationBarsPadding()
+                .padding(top = 12.dp),
             expenseDetailList = getExpenseSummaryByCategory(yearlyExpense).reversed()
         )
     }

@@ -5,6 +5,7 @@ import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.abs
 
 
 fun Double?.doubleOrZero(): Double {
@@ -39,15 +40,7 @@ fun Double?.formatDoubleToString(): String {
     return decimalFormat.format(this ?: 0.0)
 }
 
-fun Float?.nonNullable(): Float {
-    return this ?: 0.0f
-}
-
 fun Double?.doubleToFloat(): Float {
-    return this?.toFloat() ?: 0.0f
-}
-
-fun String?.stringToFloat(): Float {
     return this?.toFloat() ?: 0.0f
 }
 
@@ -123,12 +116,12 @@ fun getMonthlyExpenseTotal(expenses: List<Expense>?): Double {
     return expenseTotal
 }
 
-data class MonthlyTotalExpense(
-    val month: String,
+data class TotalExpenseWithValue(
+    val value: String,
     val totalExpense: Double
 )
 
-fun calculateMonthlyTotalExpenses(expenseList: List<Expense>?): List<MonthlyTotalExpense> {
+fun calculateMonthlyTotalExpenses(expenseList: List<Expense>?): List<TotalExpenseWithValue> {
     if (expenseList == null) {
         return emptyList()
     }
@@ -145,6 +138,33 @@ fun calculateMonthlyTotalExpenses(expenseList: List<Expense>?): List<MonthlyTota
     }
 
     return monthlyTotalMap.entries.map { (month, total) ->
-        MonthlyTotalExpense(month.toString(), total)
+        TotalExpenseWithValue(month.toString(), total)
     }
+}
+
+fun calculateDailyTotalExpenses(expenseList: List<Expense>?): List<TotalExpenseWithValue> {
+    if (expenseList == null) {
+        return emptyList()
+    }
+
+    val dailyTotalMap = mutableMapOf<Int, Double>()
+
+    for (expense in expenseList) {
+        val day = LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).dayOfMonth
+
+        val currentTotal = dailyTotalMap.getOrDefault(day, 0.0)
+        val expenseDetailTotal = expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
+
+        dailyTotalMap[day] = currentTotal + expenseDetailTotal
+    }
+
+    return dailyTotalMap.entries.map { (day, total) ->
+        TotalExpenseWithValue(day.toString(), total)
+    }
+}
+
+fun convertExpenseDetailsToMap(expenseDetails: List<ExpenseDetail>): Map<String, Double> {
+    return expenseDetails.mapNotNull { detail ->
+        detail.category?.let { category -> category to abs(detail.price.doubleOrZero()) }
+    }.toMap()
 }
