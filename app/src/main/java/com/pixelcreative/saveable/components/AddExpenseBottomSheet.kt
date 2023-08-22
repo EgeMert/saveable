@@ -47,7 +47,10 @@ import com.pixelcreative.saveable.ui.theme.White
 import com.pixelcreative.saveable.ui.theme.ZimaBlue
 
 @Composable
-fun AddExpenseBottomSheet(spendType: SpendType) {
+fun AddExpenseBottomSheet(
+    spendType: SpendType,
+    addExpenseOrIncome: (String, String, String) -> Unit
+) {
     var selectedBillType by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("") }
     var dropDownType by remember { mutableStateOf(DropDownType.None) }
@@ -66,7 +69,6 @@ fun AddExpenseBottomSheet(spendType: SpendType) {
             DropDownMenu(dropDownList = selectedList,
                 dropDownType = dropDownType,
                 onDismissAction = {
-                    selectedNumber = "0"
                     selectedCategory = Constants.EMPTY_STRING
                     selectedBillType = Constants.EMPTY_STRING
                 },
@@ -94,7 +96,8 @@ fun AddExpenseBottomSheet(spendType: SpendType) {
                 .constrainAs(spendTypeRow) {
                     centerHorizontallyTo(parent)
                     top.linkTo(parent.top)
-                }) {
+                })
+        {
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -271,7 +274,7 @@ fun AddExpenseBottomSheet(spendType: SpendType) {
                     bottom.linkTo(dayText.top)
                 })
         {
-            val numberList = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ",", "0", "okay")
+            val numberList = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "okay")
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3), modifier = Modifier.weight(3f)
             ) {
@@ -292,7 +295,17 @@ fun AddExpenseBottomSheet(spendType: SpendType) {
                             Icon(
                                 imageVector = Icons.Filled.Check,
                                 contentDescription = null,
-                                modifier = Modifier.padding(vertical = 23.dp, horizontal = 28.dp),
+                                modifier = Modifier
+                                    .padding(vertical = 23.dp, horizontal = 28.dp)
+                                    .clickable {
+                                        addExpenseOrIncome.invoke(
+                                            selectedNumber,
+                                            selectedCategory,
+                                            selectedBillType
+                                        )
+                                        selectedNumber = "0"
+
+                                    },
                                 tint = White
                             )
                         }
@@ -402,5 +415,5 @@ enum class SpendType {
 @Preview
 @Composable
 fun AddExpenseBottomSheet_Preview() {
-    AddExpenseBottomSheet(SpendType.None)
+    AddExpenseBottomSheet(SpendType.None){s, s2, s3 ->  }
 }
