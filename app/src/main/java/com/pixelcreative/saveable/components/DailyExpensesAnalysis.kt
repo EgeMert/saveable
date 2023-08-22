@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.core.doubleOrZero
@@ -60,7 +62,9 @@ fun DailyExpensesAnalysis(){
                 .padding(top = 20.dp),
             text = "Daily Expenses ( ${dailyExpense?.expenseDetailList?.expenseDetail?.size.intOrZero()} )",
             color = Pinball,
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h6,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
         )
 
         Divider(
@@ -73,7 +77,8 @@ fun DailyExpensesAnalysis(){
 
         ExpenseDetailListView(
             modifier = Modifier
-                .padding(vertical = 20.dp),
+                .navigationBarsPadding()
+                .padding(top = 12.dp),
             expenseDetailList = dailyExpense?.expenseDetailList?.expenseDetail?.reversed()
         )
     }
