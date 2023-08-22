@@ -1,5 +1,8 @@
 package com.pixelcreative.saveable.screens.expenses
 
+import android.app.DatePickerDialog
+import android.util.Log
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,12 +17,18 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,12 +46,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.AddExpenseBottomSheet
 import com.pixelcreative.saveable.components.DailyLimitCard
 import com.pixelcreative.saveable.components.SpendType
 import com.pixelcreative.saveable.components.SummaryCard
 import com.pixelcreative.saveable.components.TotalBalanceCard
+import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
 import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.formatDoubleToString
 import com.pixelcreative.saveable.core.getLocalDateAsString
@@ -61,7 +72,10 @@ import com.pixelcreative.saveable.ui.theme.RadicalRed
 import com.pixelcreative.saveable.ui.theme.White
 import com.pixelcreative.saveable.ui.theme.ZimaBlue
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @ExperimentalMaterialApi
 fun ExpensesScreen(
@@ -79,7 +93,10 @@ fun ExpensesScreen(
     val monthlyExpense = expensesScreenViewModel.monthlyExpense.collectAsState().value
 
     val dailyLimit by rememberSaveable { mutableDoubleStateOf(500.00) }
-
+    var canShowDatePicker by remember{ mutableStateOf(false)}
+    var date by remember {
+        mutableStateOf(EMPTY_STRING)
+    }
     val sheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,skipHalfExpanded = true)
     val scope = rememberCoroutineScope()
@@ -91,11 +108,34 @@ fun ExpensesScreen(
             hideBottomSheet.invoke(true)
         }
     }
+
     ModalBottomSheetLayout(
         modifier = Modifier.navigationBarsPadding(),
         scrimColor = Color.Black.copy(alpha = 0.3f),
         sheetContent = {
-            AddExpenseBottomSheet(spendType = spendingType){userInput, selectedCategory, selectedBillType->
+            if (canShowDatePicker){
+                val datePickerState = rememberDatePickerState(selectableDates = object :
+                    SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        return utcTimeMillis <= System.currentTimeMillis()
+                    }
+                })
+
+                val selectedDate = datePickerState.selectedDateMillis?.let {
+                    convertMillisToDate(it)
+                } ?: ""
+                DatePickerDialog(onDismissRequest = { canShowDatePicker = false }, confirmButton = {
+                    date =selectedDate
+                    Log.d("date","Selected Date--> $date")
+                }) {
+                    DatePicker(
+                        state = datePickerState
+                    )
+                }
+            }
+            AddExpenseBottomSheet(spendType = spendingType, addDate = {
+                canShowDatePicker = true
+            }){ userInput, selectedCategory, selectedBillType->
                 if (spendingType == SpendType.Expense) {
                     dailyExpense?.let { expense ->
                         if (expense.date != getLocalDateAsString()) {
@@ -242,7 +282,8 @@ fun ExpensesScreen(
                             scope.launch {
                                 hideBottomSheet.invoke(false)
                                 spendingType = SpendType.Expense
-                                sheetState.show()
+                               // sheetState.show()
+                                router.goToAddExpenseScreen(SpendType.Expense.name)
 
                             }
                         }
@@ -273,7 +314,8 @@ fun ExpensesScreen(
                             scope.launch {
                                 hideBottomSheet.invoke(false)
                                 spendingType = SpendType.Income
-                                sheetState.show()
+                               // sheetState.show()
+                                router.goToAddExpenseScreen(SpendType.Income.name)
                             }
                         }
                         .clip(RoundedCornerShape(8.dp))
@@ -305,4 +347,8 @@ fun getRecentExpense(dailyExpense: Expense?): List<ExpenseDetail>? {
             detail?.takeLast(minOf(4, detail.size))
         }?.reversed()
     }
+}
+private fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy")
+    return formatter.format(Date(millis))
 }

@@ -81,8 +81,8 @@ class RouterImplementation(
         navigate(Screens.ChartScreen)
     }
 
-    override fun goToAddExpenseScreen() {
-        navigate(Screens.AddExpenseScreen)
+    override fun goToAddExpenseScreen(spendType:String) {
+        navigateArg(Screens.AddExpenseScreen.passMessage(spendType = spendType))
     }
 
     override fun goToMessageScreen(message: String) {

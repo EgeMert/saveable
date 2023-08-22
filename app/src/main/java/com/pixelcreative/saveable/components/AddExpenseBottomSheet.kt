@@ -49,7 +49,9 @@ import com.pixelcreative.saveable.ui.theme.ZimaBlue
 @Composable
 fun AddExpenseBottomSheet(
     spendType: SpendType,
-    addExpenseOrIncome: (String, String, String) -> Unit
+    addDate:() -> Unit = {},
+    addExpenseOrIncome: (String, String, String) -> Unit,
+
 ) {
     var selectedBillType by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("") }
@@ -235,7 +237,7 @@ fun AddExpenseBottomSheet(
                     centerHorizontallyTo(parent)
                 }) {
             Text(
-                text = spendType.name,
+                text = "Test",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp),
@@ -379,7 +381,9 @@ fun AddExpenseBottomSheet(
                     Icon(
                         imageVector = Icons.Filled.DateRange,
                         contentDescription = null,
-                        modifier = Modifier,
+                        modifier = Modifier.clickable {
+                            addDate.invoke()
+                        },
                         tint = White
                     )
                 }
@@ -415,5 +419,5 @@ enum class SpendType {
 @Preview
 @Composable
 fun AddExpenseBottomSheet_Preview() {
-    AddExpenseBottomSheet(SpendType.None){s, s2, s3 ->  }
+    AddExpenseBottomSheet( SpendType.None, addDate = {}){s, s2, s3 ->  }
 }

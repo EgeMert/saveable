@@ -80,8 +80,14 @@ private fun NavGraphBuilder.mainNavigation(
 
     composable(
         route = Screens.AddExpenseScreen.route,
-    ){
-        AddExpenseScreen(router = router )
+        arguments = listOf(navArgument("spendType") {
+            type = NavType.StringType
+            defaultValue = ""
+            nullable  = true
+        })
+    ){navBackStackEntry ->
+        val type = navBackStackEntry.arguments?.getString("spendType").orEmpty()
+        AddExpenseScreen(router = router , spendType =type )
     }
 }
 

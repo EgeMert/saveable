@@ -7,7 +7,11 @@ sealed class Screens(
     object SplashScreen : Screens(route = Path.SPLASH.path)
     object DetailScreen : Screens(route = Path.DETAIL_SCREEN.path)
     object ExpenseScreen : Screens(route = Path.EXPENSE_SCREEN.path)
-    object AddExpenseScreen : Screens(route = Path.ADD_EXPENSE_SCREEN.path)
+    object AddExpenseScreen : Screens(route = Path.ADD_EXPENSE_SCREEN.path){
+        fun passMessage(spendType:String):String{
+            return "ADD_EXPENSE_SCREEN/$spendType"
+        }
+    }
 
     object ChartScreen : Screens(route = Path.CHART_SCREEN.path)
     object MessageScreen : Screens(route = Path.MESSAGE_SCREEN.path){
@@ -22,7 +26,7 @@ object Routes {
     const val SPLASH = "SPLASH"
     const val DETAIL_SCREEN = "DETAIL_SCREEN"
     const val EXPENSE_SCREEN = "EXPENSE_SCREEN"
-    const val ADD_EXPENSE_SCREEN = "ADD_EXPENSE_SCREEN"
+    const val ADD_EXPENSE_SCREEN = "ADD_EXPENSE_SCREEN/{spendType}"
     const val CHART_SCREEN = "CHART_SCREEN"
 }
 enum class Path(

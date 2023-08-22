@@ -2,6 +2,7 @@ package com.pixelcreative.saveable.screens.expenses
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
 import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
@@ -62,10 +63,11 @@ class ExpensesScreenViewModel @Inject constructor(
     fun addDailyExpense(
         expenseAmount: Double,
         selectedCategory: String,
-        incomeAmount: Double
+        incomeAmount: Double,
+        inputDate:String?=EMPTY_STRING,
     ) = viewModelScope.launch {
         val expense = Expense(
-            date = getLocalDateAsString(),
+            date =if (inputDate.isNullOrEmpty()) getLocalDateAsString() else inputDate,
             expenseDetailList = ExpenseDetailList(
                 expenseDetail = listOf(
                     ExpenseDetail(
