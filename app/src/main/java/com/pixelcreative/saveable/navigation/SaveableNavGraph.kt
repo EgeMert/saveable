@@ -12,6 +12,7 @@ import com.pixelcreative.saveable.screens.chart.ChartScreen
 import com.pixelcreative.saveable.screens.addexpense.AddExpenseScreen
 import com.pixelcreative.saveable.screens.detail.DetailScreen
 import com.pixelcreative.saveable.screens.expenses.ExpensesScreen
+import com.pixelcreative.saveable.screens.profile.ProfileScreen
 import com.pixelcreative.saveable.screens.splashscreen.SplashScreen
 
 @Composable
@@ -76,6 +77,11 @@ private fun NavGraphBuilder.mainNavigation(
         route = Screens.ChartScreen.route,
     ){
         ChartScreen(router = router )
+    }
+    composable(
+        route = Screens.ProfileScreen.route,
+    ){
+        ProfileScreen(router = router )
     }
 
     composable(

@@ -8,5 +8,6 @@ interface Router {
    fun goToExpenseScreen()
    fun goToAddExpenseScreen(spendType:String)
    fun goToChartScreen()
+   fun goToProfileScreen()
     fun goToMessageScreen(message: String)
 }
