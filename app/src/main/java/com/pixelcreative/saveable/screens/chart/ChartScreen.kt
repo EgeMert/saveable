@@ -19,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pixelcreative.saveable.R
 import com.pixelcreative.saveable.components.MpBarChart
 import com.pixelcreative.saveable.components.MpPieChart
 import com.pixelcreative.saveable.core.calculateDailyTotalExpenses
@@ -44,7 +46,11 @@ fun ChartScreen(
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    val tabNames = listOf("Daily", "Monthly", "Yearly")
+    val tabNames = listOf(
+        stringResource(id = R.string.daily),
+        stringResource(id = R.string.monthly),
+        stringResource(id = R.string.yearly)
+    )
 
     Column(
         modifier = Modifier

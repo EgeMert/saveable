@@ -1,12 +1,13 @@
 package com.pixelcreative.saveable.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pixelcreative.saveable.R
+import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
 import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.formatDoubleToString
 import com.pixelcreative.saveable.core.getImageFromLabel
@@ -29,28 +31,35 @@ fun ExpenseDetailListView(
     expenseDetailList: List<ExpenseDetail>?,
     emptyListModifier: Modifier = Modifier
 ) {
-    if (expenseDetailList.isNullOrEmpty().not()) {
-        Column(modifier = modifier) {
-            expenseDetailList?.forEach { detail ->
-                val sign = if (detail.isIncome == true) "+ " else ""
+    if (expenseDetailList.isNullOrEmpty()) {
+        Text(
+            modifier = emptyListModifier,
+            text = stringResource(id = R.string.no_expense_text),
+            color = White,
+            style = MaterialTheme.typography.h3
+        )
+    } else {
+        LazyColumn(modifier = modifier) {
+            items(expenseDetailList) { detail ->
+                val sign = if (detail.isIncome == true) stringResource(
+                    id = R.string.plus
+                ) else EMPTY_STRING
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val imagePainter = getImageFromLabel(detail.category ?: "Food")
-                    imagePainter?.let {
-                        Image(
-                            modifier = Modifier.size(44.dp),
-                            painter = it,
-                            contentDescription = detail.category.orEmpty()
-                        )
-                    }
+                    val imagePainter = getImageFromLabel(detail.category ?: "Other")
+                    Image(
+                        modifier = Modifier.size(44.dp),
+                        painter = imagePainter,
+                        contentDescription = detail.category.orEmpty()
+                    )
                     Text(
                         modifier = Modifier
                             .padding(start = 8.dp),
-                        text = detail.category.orEmpty(),
+                        text = detail.category ?: "Other",
                         color = White,
                         style = MaterialTheme.typography.h5
                     )
@@ -73,12 +82,5 @@ fun ExpenseDetailListView(
                 }
             }
         }
-    } else {
-        Text(
-            modifier = emptyListModifier,
-            text = stringResource(id = R.string.no_expense_text),
-            color = White,
-            style = MaterialTheme.typography.h3
-        )
     }
 }
