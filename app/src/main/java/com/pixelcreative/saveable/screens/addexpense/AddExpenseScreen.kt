@@ -58,9 +58,10 @@ import com.pixelcreative.saveable.R
 import com.pixelcreative.saveable.components.DropDownMenu
 import com.pixelcreative.saveable.components.DropDownType
 import com.pixelcreative.saveable.components.SpendType
-import com.pixelcreative.saveable.core.CategoriesEnum
 import com.pixelcreative.saveable.core.Constants
 import com.pixelcreative.saveable.core.doubleOrZero
+import com.pixelcreative.saveable.core.getAllCategories
+import com.pixelcreative.saveable.core.getEnumByLocalizedLabel
 import com.pixelcreative.saveable.core.getLocalDateAsString
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.navigation.Router
@@ -96,14 +97,15 @@ fun AddExpenseScreen(
     var date by remember {
         mutableStateOf(getLocalDateAsString())
     }
-    var spendingType by remember { mutableStateOf(SpendType.Income) }
+    var spendingType by remember { mutableStateOf(SpendType.Expense) }
     val categoryList = remember { mutableStateListOf<String>() }
     val unselectedCategoryInfoMessage = stringResource(id = R.string.select_category_text)
-    val expenseSavedSuccessfullyMessage = stringResource(id = R.string.select_category_text)
+    val expenseSavedSuccessfullyMessage = stringResource(id = R.string.saved_expense_info_text)
 
-    CategoriesEnum.values().forEach {
-        categoryList.add(it.name)
+    getAllCategories().forEach {
+        categoryList.add(stringResource(id = it.labelResId))
     }
+
     val context = LocalContext.current
     ConstraintLayout(
         modifier = Modifier
@@ -361,7 +363,10 @@ fun AddExpenseScreen(
                                                 if (expense.date != getLocalDateAsString()) {
                                                     expensesScreenViewModel.addDailyExpense(
                                                         expenseAmount = selectedNumber.toDouble(),
-                                                        selectedCategory = selectedCategory,
+                                                        selectedCategory = getEnumByLocalizedLabel(
+                                                            selectedCategory,
+                                                            context
+                                                        )?.name.orEmpty(),
                                                         incomeAmount = 0.0,
                                                         inputDate = date
                                                     )
@@ -370,7 +375,10 @@ fun AddExpenseScreen(
                                                         expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
                                                             ExpenseDetail(
                                                                 price = selectedNumber.toDouble(),
-                                                                category = selectedCategory,
+                                                                category = getEnumByLocalizedLabel(
+                                                                    selectedCategory,
+                                                                    context
+                                                                )?.name.orEmpty(),
                                                                 isIncome = false,
                                                             )
                                                         ),
@@ -386,7 +394,10 @@ fun AddExpenseScreen(
                                             } ?: run {
                                                 expensesScreenViewModel.addDailyExpense(
                                                     expenseAmount = selectedNumber.toDouble(),
-                                                    selectedCategory = selectedCategory,
+                                                    selectedCategory = getEnumByLocalizedLabel(
+                                                        selectedCategory,
+                                                        context
+                                                    )?.name.orEmpty(),
                                                     incomeAmount = 0.0,
                                                     inputDate = date
                                                 )
@@ -396,7 +407,10 @@ fun AddExpenseScreen(
                                                 if (expense.date != getLocalDateAsString()) {
                                                     expensesScreenViewModel.addDailyExpense(
                                                         incomeAmount = selectedNumber.toDouble(),
-                                                        selectedCategory = selectedCategory,
+                                                        selectedCategory = getEnumByLocalizedLabel(
+                                                            selectedCategory,
+                                                            context
+                                                        )?.name.orEmpty(),
                                                         expenseAmount = 0.0,
                                                         inputDate = date
                                                     )
@@ -405,7 +419,10 @@ fun AddExpenseScreen(
                                                         expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
                                                             ExpenseDetail(
                                                                 price = selectedNumber.toDouble(),
-                                                                category = selectedCategory,
+                                                                category = getEnumByLocalizedLabel(
+                                                                    selectedCategory,
+                                                                    context
+                                                                )?.name.orEmpty(),
                                                                 isIncome = true
                                                             )
                                                         ),
@@ -432,7 +449,6 @@ fun AddExpenseScreen(
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
-
                                     },
                                 tint = White
                             )

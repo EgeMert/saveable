@@ -19,6 +19,7 @@ import com.pixelcreative.saveable.R
 import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
 import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.formatDoubleToString
+import com.pixelcreative.saveable.core.getCategoryLabel
 import com.pixelcreative.saveable.core.getImageFromLabel
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import com.pixelcreative.saveable.ui.theme.Emerald
@@ -59,7 +60,7 @@ fun ExpenseDetailListView(
                     Text(
                         modifier = Modifier
                             .padding(start = 8.dp),
-                        text = detail.category ?: "Other",
+                        text = getCategoryLabel(detail.category.orEmpty()),
                         color = White,
                         style = MaterialTheme.typography.h5
                     )
