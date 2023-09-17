@@ -38,6 +38,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -89,6 +90,8 @@ fun AddExpenseScreen(
     val selectedList = remember { mutableStateListOf<String>() }
     var showDialog by remember { mutableStateOf(false) }
     var selectedNumber by remember { mutableStateOf("0") }
+    var temporarySelectedNumber by remember { mutableStateOf("0") }
+    var dotCounter by remember { mutableIntStateOf(0) }
     var canShowDatePicker by remember { mutableStateOf(false) }
     var date by remember {
         mutableStateOf(getLocalDateAsString())
@@ -440,8 +443,15 @@ fun AddExpenseScreen(
                                 .background(Color.White)
                                 .border(width = 0.3.dp, color = Color.Black)
                                 .clickable {
+                                    temporarySelectedNumber = items
                                     if (selectedNumber == "0") selectedNumber =
                                         Constants.EMPTY_STRING
+                                    if (temporarySelectedNumber == ".") {
+                                        dotCounter++
+                                    }
+                                    if (dotCounter >1 && temporarySelectedNumber == ".") {
+                                        return@clickable
+                                    }
                                     selectedNumber += items
                                 }, contentAlignment = Alignment.Center
                         ) {
