@@ -46,13 +46,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pixelcreative.saveable.R
 import com.pixelcreative.saveable.components.DropDownMenu
 import com.pixelcreative.saveable.components.DropDownType
 import com.pixelcreative.saveable.components.SpendType
@@ -94,6 +95,8 @@ fun AddExpenseScreen(
     }
     var spendingType by remember { mutableStateOf(SpendType.Income) }
     val categoryList = remember { mutableStateListOf<String>() }
+    val unselectedCategoryInfoMessage = stringResource(id = R.string.select_category_text)
+    val expenseSavedSuccessfullyMessage = stringResource(id = R.string.select_category_text)
 
     CategoriesEnum.values().forEach {
         categoryList.add(it.name)
@@ -185,7 +188,8 @@ fun AddExpenseScreen(
                     }, contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Gelir", style = MaterialTheme.typography.body1,
+                    text = stringResource(id = R.string.spend_type_income),
+                    style = MaterialTheme.typography.body1,
                     color = White,
                     modifier = Modifier.padding(vertical = 12.dp)
                 )
@@ -200,12 +204,14 @@ fun AddExpenseScreen(
                             )
                         )
                     )
-                    .weight(1f) .clickable {
+                    .weight(1f)
+                    .clickable {
                         spendingType = SpendType.Expense
                     }, contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Gider", style = MaterialTheme.typography.body1,
+                    text = stringResource(id = R.string.spend_type_expense),
+                    style = MaterialTheme.typography.body1,
                     color = White,
                     modifier = Modifier.padding(vertical = 12.dp)
                 )
@@ -251,7 +257,7 @@ fun AddExpenseScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Category",
+                            text = stringResource(id = R.string.category),
                             modifier = Modifier,
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.body1,
@@ -338,7 +344,13 @@ fun AddExpenseScreen(
                                     .clickable {
                                         if (selectedNumber.isEmpty()) return@clickable
                                         if (selectedCategory.isEmpty()) {
-                                            Toast.makeText(context,"Kategori seçmeden harcama giremezsiniz!", Toast.LENGTH_SHORT).show()
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    unselectedCategoryInfoMessage,
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
                                             return@clickable
                                         }
                                         if (spendingType == SpendType.Expense) {
@@ -410,7 +422,13 @@ fun AddExpenseScreen(
                                             }
                                         }
                                         selectedNumber = "0"
-                                        Toast.makeText(context,"Harcama kaydedildi!", Toast.LENGTH_SHORT).show()
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                expenseSavedSuccessfullyMessage,
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
 
                                     },
                                 tint = White

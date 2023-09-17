@@ -3,7 +3,7 @@
     <string name="main_title">Saveable</string>
     <string name="total_balance_title">Toplam bakiye</string>
     <string name="total_balance_info">%1$s TL</string>
-    <string name="daily_expense_count_info">Günlük giderler (%1$d)</string>
+    <string name="daily_expense_count_info">Günlük harcamalar (%1$d)</string>
     <string name="monthly_categories_count_info">Aylık harcama kategorileri (%1$d)</string>
     <string name="yearly_categories_count_info">Yıllık harcama kategorileri (%1$d)</string>
     <string name="daily_spending_limit_title">Günlük harcama limiti</string>
@@ -40,4 +40,10 @@
     <string name="category_warming">Isıtma</string>
     <string name="category_water">Su</string>
     <string name="plus">+\u0020</string>
+    <string name="category">Kategori</string>
+    <string name="spend_type_expense">Harcama</string>
+    <string name="spend_type_income">Gelir</string>
+    <string name="spend_type_none">Yok</string>
+    <string name="select_category_text">Lütfen bir kategori seçin</string>
+    <string name="saved_expense_info_text">Harcama kaydedildi</string>
 </resources>

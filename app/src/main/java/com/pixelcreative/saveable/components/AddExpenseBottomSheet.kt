@@ -60,7 +60,7 @@ fun AddExpenseBottomSheet(
     val selectedList = remember { mutableStateListOf<String>() }
     var showDialog by remember { mutableStateOf(false) }
     var selectedNumber by remember { mutableStateOf("0") }
-    val categoryList  = remember { mutableStateListOf<String>()}
+    val categoryList = remember { mutableStateListOf<String>() }
 
     CategoriesEnum.values().forEach {
         categoryList.add(it.name)
@@ -94,7 +94,6 @@ fun AddExpenseBottomSheet(
                             return@DropDownMenu
                         }
                     }
-
                 })
         }
         Row(
@@ -402,5 +401,5 @@ enum class SpendType {
 @Preview
 @Composable
 fun AddExpenseBottomSheet_Preview() {
-    AddExpenseBottomSheet( SpendType.None, addDate = {}){s, s2, s3 ->  }
+    AddExpenseBottomSheet(SpendType.None, addDate = {}) { s, s2, s3 -> }
 }
