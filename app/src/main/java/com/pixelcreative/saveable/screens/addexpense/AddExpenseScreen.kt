@@ -26,6 +26,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
@@ -45,10 +46,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontVariation.weight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,7 +82,8 @@ import java.util.Date
 @Composable
 @ExperimentalMaterialApi
 fun AddExpenseScreen(
-    router: Router?
+    router: Router,
+    spendType: String?
 ) {
     val expensesScreenViewModel: ExpensesScreenViewModel = hiltViewModel()
 
@@ -97,7 +101,9 @@ fun AddExpenseScreen(
     var date by remember {
         mutableStateOf(getLocalDateAsString())
     }
+    Log.d("spend","spendType ARg ---> $spendType")
     var spendingType by remember { mutableStateOf(SpendType.Expense) }
+
     val categoryList = remember { mutableStateListOf<String>() }
     val unselectedCategoryInfoMessage = stringResource(id = R.string.select_category_text)
     val expenseSavedSuccessfullyMessage = stringResource(id = R.string.saved_expense_info_text)
@@ -181,14 +187,15 @@ fun AddExpenseScreen(
                 modifier = Modifier
                     .background(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                BluishPurple,
-                                ZimaBlue,
+                            colors =listOf(
+                                Color.Red,
+                                Color.Black,
                             )
                         )
                     )
                     .weight(1f)
                     .clickable {
+
                         spendingType = SpendType.Income
                     }, contentAlignment = Alignment.Center
             ) {
@@ -203,9 +210,9 @@ fun AddExpenseScreen(
                 modifier = Modifier
                     .background(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                BluishPurple,
-                                ZimaBlue,
+                            colors =  listOf(
+                                Color.Red,
+                                Color.Black,
                             )
                         )
                     )
@@ -293,7 +300,7 @@ fun AddExpenseScreen(
                     centerHorizontallyTo(parent)
                 }) {
             Text(
-                text = spendingType.name,
+                text =if (spendType?.isNotEmpty() == true && spendType.contains("spend").not()) spendType else spendingType.name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 18.dp),
@@ -347,7 +354,7 @@ fun AddExpenseScreen(
                                 modifier = Modifier
                                     .padding(vertical = 23.dp, horizontal = 28.dp)
                                     .clickable {
-                                        if (selectedNumber.isEmpty()) return@clickable
+                                        if (selectedNumber.isEmpty() || selectedNumber == ".") return@clickable
                                         if (selectedCategory.isEmpty()) {
                                             Toast
                                                 .makeText(
@@ -508,7 +515,7 @@ fun AddExpenseScreen(
                         }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Delete,
+                        imageVector = Icons.Filled.ArrowBack,
                         contentDescription = null,
                         modifier = Modifier,
                         tint = White
@@ -564,13 +571,6 @@ fun AddExpenseScreen(
 
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF000000)
-@Composable
-fun AddExpenseScreenPreview() {
-    AddExpenseScreen(null)
-
-}
 
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy")

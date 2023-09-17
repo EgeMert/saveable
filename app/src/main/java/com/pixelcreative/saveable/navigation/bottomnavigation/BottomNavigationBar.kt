@@ -18,12 +18,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelcreative.saveable.ui.theme.BondyBlue
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController, bottomBarState: Boolean) {
-    AnimatedVisibility(
-        visible = bottomBarState,
-        enter = slideInVertically(initialOffsetY = { it }),
-        exit = slideOutVertically(targetOffsetY = { it }),
-    ) {
+fun BottomNavigationBar(navController: NavHostController) {
+
         BottomNavigation {
             val backStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = backStackEntry?.destination?.route
@@ -51,5 +47,4 @@ fun BottomNavigationBar(navController: NavHostController, bottomBarState: Boolea
                 )
             }
         }
-    }
 }

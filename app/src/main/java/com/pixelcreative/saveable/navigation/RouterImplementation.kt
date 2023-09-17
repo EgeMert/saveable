@@ -40,7 +40,7 @@ class RouterImplementation(
             navigate(route = route) {
                 if (removeFromHistory) {
                     if (singleTop) {
-                        popUpTo(Screens.Home.route)
+                        popUpTo(Screens.ExpenseScreen.route)
                     } else {
                         popUpTo(0) {
                             saveState = false
@@ -66,7 +66,7 @@ class RouterImplementation(
     }
 
     override fun goToHomeScreen() {
-        navigate(Screens.Home)
+        navigate(Screens.ExpenseScreen)
     }
 
     override fun goToDetailScreen() {

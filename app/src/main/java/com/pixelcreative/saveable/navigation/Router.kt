@@ -1,5 +1,7 @@
 package com.pixelcreative.saveable.navigation
 
+import com.pixelcreative.saveable.components.SpendType
+
 interface Router {
     fun goBack()
    fun goToSplashScreen()

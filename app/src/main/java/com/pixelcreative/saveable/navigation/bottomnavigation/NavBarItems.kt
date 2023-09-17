@@ -29,7 +29,7 @@ object NavBarItems {
         ),
         BottomBarItem(
             image = Icons.Filled.MoreVert,
-            route = Screens.Home.route
+            route = Screens.ProfileScreen.route
         )
     )
 }

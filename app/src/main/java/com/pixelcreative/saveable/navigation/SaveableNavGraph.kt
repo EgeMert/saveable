@@ -8,6 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.pixelcreative.saveable.components.SpendType
+import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
 import com.pixelcreative.saveable.screens.addexpense.AddExpenseScreen
 import com.pixelcreative.saveable.screens.chart.ChartScreen
 import com.pixelcreative.saveable.screens.detail.DetailScreen
@@ -20,7 +22,6 @@ fun SaveableNavGraph(
     navController: NavHostController,
     router: Router,
     startDestination: String = Screens.SplashScreen.route,
-    hideBottomSheet: (Boolean) -> Unit = {},
     navGraphBuilder: NavGraphBuilder.() -> Unit = {},
 ) {
     NavHost(
@@ -28,25 +29,20 @@ fun SaveableNavGraph(
         startDestination = startDestination
     ) {
         navGraphBuilder.invoke(this)
-        mainNavigation(router, hideBottomSheet)
+        mainNavigation(router)
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 private fun NavGraphBuilder.mainNavigation(
     router: Router,
-    hideBottomSheet: (Boolean) -> Unit = {},
 ) {
     composable(
         route = Screens.SplashScreen.route
     ) {
         SplashScreen(router = router)
     }
-    composable(
-        route = Screens.Home.route,
 
-        ) {
-    }
     composable(
         route = Screens.MessageScreen.route,
         arguments = listOf(navArgument("message") {
@@ -60,7 +56,7 @@ private fun NavGraphBuilder.mainNavigation(
     composable(
         route = Screens.ExpenseScreen.route,
     ) {
-        ExpensesScreen(router = router, hideBottomSheet)
+        ExpensesScreen(router = router)
     }
 
     composable(
@@ -84,11 +80,11 @@ private fun NavGraphBuilder.mainNavigation(
         route = Screens.AddExpenseScreen.route,
         arguments = listOf(navArgument("spendType") {
             type = NavType.StringType
-            defaultValue = ""
+            defaultValue = null
             nullable = true
         })
     ) { navBackStackEntry ->
-        val type = navBackStackEntry.arguments?.getString("spendType").orEmpty()
-        AddExpenseScreen(router = router)
+        val type = navBackStackEntry.arguments?.getString("spendType")
+        AddExpenseScreen(router = router, spendType =  type)
     }
 }

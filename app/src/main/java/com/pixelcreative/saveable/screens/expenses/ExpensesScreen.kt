@@ -77,7 +77,6 @@ import java.util.Date
 @ExperimentalMaterialApi
 fun ExpensesScreen(
     router: Router,
-    hideBottomSheet: (Boolean) -> Unit
 ) {
     val expensesScreenViewModel: ExpensesScreenViewModel = hiltViewModel()
 
@@ -90,273 +89,151 @@ fun ExpensesScreen(
     val monthlyExpense = expensesScreenViewModel.monthlyExpense.collectAsState().value
 
     val dailyLimit by rememberSaveable { mutableDoubleStateOf(500.00) }
-    var canShowDatePicker by remember { mutableStateOf(false) }
-    var date by remember {
-        mutableStateOf(EMPTY_STRING)
-    }
-    val sheetState =
-        rememberModalBottomSheetState(
-            initialValue = ModalBottomSheetValue.Hidden,
-            skipHalfExpanded = true
-        )
-    val scope = rememberCoroutineScope()
+
     expensesScreenViewModel.getDailyExpense(getLocalDateAsString())
 
-    var spendingType by remember { mutableStateOf(SpendType.None) }
-    LaunchedEffect(sheetState.currentValue) {
-        if (sheetState.currentValue == ModalBottomSheetValue.Hidden) {
-            hideBottomSheet.invoke(true)
-        }
-    }
 
-    ModalBottomSheetLayout(
-        modifier = Modifier.navigationBarsPadding(),
-        scrimColor = Color.Black.copy(alpha = 0.3f),
-        sheetContent = {
-            if (canShowDatePicker) {
-                val datePickerState = rememberDatePickerState(selectableDates = object :
-                    SelectableDates {
-                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                        return utcTimeMillis <= System.currentTimeMillis()
-                    }
-                })
 
-                val selectedDate = datePickerState.selectedDateMillis?.let {
-                    convertMillisToDate(it)
-                } ?: EMPTY_STRING
-                DatePickerDialog(onDismissRequest = { canShowDatePicker = false }, confirmButton = {
-                    date = selectedDate
-                }) {
-                    DatePicker(
-                        state = datePickerState
-                    )
-                }
-            }
-            AddExpenseBottomSheet(
-                spendType = spendingType,
-                addDate = {
-                    canShowDatePicker = true
-                }
-            ) { userInput, selectedCategory, selectedBillType ->
-                if (spendingType == SpendType.Expense) {
-                    dailyExpense?.let { expense ->
-                        if (expense.date != getLocalDateAsString()) {
-                            expensesScreenViewModel.addDailyExpense(
-                                expenseAmount = userInput.toDouble(),
-                                selectedCategory = selectedCategory,
-                                incomeAmount = 0.0
-                            )
-                        } else {
-                            expensesScreenViewModel.updateExpenseList(
-                                expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
-                                    ExpenseDetail(
-                                        price = userInput.toDouble(),
-                                        category = selectedCategory,
-                                        isIncome = false
-                                    )
-                                ),
-                                dailyTotalExpense =
-                                dailyExpense.dailyTotalExpense.plus(userInput.toDouble())
-                                    .doubleOrZero(),
-                                dailyTotalIncome = dailyExpense.dailyTotalIncome
-                            )
-                        }
-                    } ?: run {
-                        expensesScreenViewModel.addDailyExpense(
-                            expenseAmount = userInput.toDouble(),
-                            selectedCategory = selectedCategory,
-                            incomeAmount = 0.0
-                        )
-                    }
-                } else {
-                    dailyExpense?.let { expense ->
-                        if (expense.date != getLocalDateAsString()) {
-                            expensesScreenViewModel.addDailyExpense(
-                                incomeAmount = userInput.toDouble(),
-                                selectedCategory = selectedCategory,
-                                expenseAmount = 0.0
-                            )
-                        } else {
-                            expensesScreenViewModel.updateExpenseList(
-                                expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
-                                    ExpenseDetail(
-                                        price = userInput.toDouble(),
-                                        category = selectedCategory,
-                                        isIncome = true
-                                    )
-                                ),
-                                dailyTotalExpense = dailyExpense.dailyTotalExpense,
-                                dailyTotalIncome =
-                                dailyExpense.dailyTotalIncome.plus(userInput.toDouble())
-                                    .doubleOrZero()
-                            )
-                        }
-                    } ?: run {
-                        expensesScreenViewModel.addDailyExpense(
-                            incomeAmount = userInput.toDouble(),
-                            selectedCategory = selectedCategory,
-                            expenseAmount = 0.0
-                        )
-                    }
-                }
-                scope.launch {
-                    sheetState.hide()
 
-                }
-            }
-        },
-        sheetState = sheetState
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(BlackHtun)
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(BlackHtun)
+                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .weight(2f)
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 20.dp)
-                    .weight(2f)
-            ) {
-                Row {
-                    TotalBalanceCard(
+            Row {
+                TotalBalanceCard(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1.6f),
+                    colors = listOf(ZimaBlue, BluishPurple),
+                    totalBalance = stringResource(
+                        id = R.string.total_balance_info,
+                        getMonthlyIncomeTotal(monthlyExpense).minus(
+                            getMonthlyExpenseTotal(monthlyExpense)
+                        ).formatDoubleToString()
+                    ),
+                    monthlyIncome = stringResource(
+                        id = R.string.total_balance_info,
+                        getMonthlyIncomeTotal(monthlyExpense).formatDoubleToString()
+                    ),
+                    monthlyExpense = stringResource(
+                        id = R.string.total_balance_info,
+                        getMonthlyExpenseTotal(monthlyExpense).formatDoubleToString()
+                    )
+                )
+
+                Column(
+                    modifier = Modifier
+                        .padding(start = 20.dp)
+                        .weight(1.4f)
+                ) {
+
+                    DailyLimitCard(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1.6f),
-                        colors = listOf(ZimaBlue, BluishPurple),
-                        totalBalance = stringResource(
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        colors = listOf(InvasiveIndigo, MediumSpringGreen),
+                        title = stringResource(id = R.string.daily_spending_limit_title),
+                        limit = stringResource(
                             id = R.string.total_balance_info,
-                            getMonthlyIncomeTotal(monthlyExpense).minus(
-                                getMonthlyExpenseTotal(monthlyExpense)
-                            ).formatDoubleToString()
-                        ),
-                        monthlyIncome = stringResource(
-                            id = R.string.total_balance_info,
-                            getMonthlyIncomeTotal(monthlyExpense).formatDoubleToString()
-                        ),
-                        monthlyExpense = stringResource(
-                            id = R.string.total_balance_info,
-                            getMonthlyExpenseTotal(monthlyExpense).formatDoubleToString()
+                            dailyLimit.formatDoubleToString()
                         )
                     )
 
-                    Column(
+                    DailyLimitCard(
                         modifier = Modifier
-                            .padding(start = 20.dp)
-                            .weight(1.4f)
-                    ) {
-
-                        DailyLimitCard(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth(),
-                            colors = listOf(InvasiveIndigo, MediumSpringGreen),
-                            title = stringResource(id = R.string.daily_spending_limit_title),
-                            limit = stringResource(
-                                id = R.string.total_balance_info,
-                                dailyLimit.formatDoubleToString()
-                            )
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(top = 12.dp),
+                        colors = listOf(RadicalRed, BonusLevel),
+                        title = stringResource(id = R.string.remaining_limit_title),
+                        limit = stringResource(
+                            id = R.string.total_balance_info,
+                            dailyLimit.plus(
+                                (dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
+                                    dailyExpense?.dailyTotalExpense.doubleOrZero()
+                                ))
+                            ).formatDoubleToString()
                         )
-
-                        DailyLimitCard(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                                .padding(top = 12.dp),
-                            colors = listOf(RadicalRed, BonusLevel),
-                            title = stringResource(id = R.string.remaining_limit_title),
-                            limit = stringResource(
-                                id = R.string.total_balance_info,
-                                dailyLimit.plus(
-                                    (dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
-                                        dailyExpense?.dailyTotalExpense.doubleOrZero()
-                                    ))
-                                ).formatDoubleToString()
-                            )
-                        )
-                    }
+                    )
                 }
             }
+        }
 
-            SummaryCard(
+        SummaryCard(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .weight(3.7f),
+            recentExpense = getRecentExpense(dailyExpense),
+            onSeeAllClicked = {
+                router.goToDetailScreen()
+                //Burda gidiyor fakat tekrar anasayfaya basınca anasayfaya dönmüyor sadece backpress yapınca dönüyor
+            }
+        )
+
+        Row(
+            modifier = Modifier
+                .weight(1.3f)
+                .padding(horizontal = 16.dp, vertical = 20.dp)
+        ) {
+            Column(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 20.dp)
-                    .weight(3.7f),
-                recentExpense = getRecentExpense(dailyExpense),
-                onSeeAllClicked = {
-                    router.goToDetailScreen()
-                    //Burda gidiyor fakat tekrar anasayfaya basınca anasayfaya dönmüyor sadece backpress yapınca dönüyor
-                }
-            )
-//
-//            Row(
-//                modifier = Modifier
-//                    .weight(1.3f)
-//                    .padding(horizontal = 16.dp, vertical = 20.dp)
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .clickable {
-//                            scope.launch {
-//                                hideBottomSheet.invoke(false)
-//                                spendingType = SpendType.Expense
-//                                // sheetState.show()
-//                                router.goToAddExpenseScreen(SpendType.Expense.name)
-//
-//                            }
-//                        }
-//                        .clip(RoundedCornerShape(8.dp))
-//                        .background(
-//                            brush = Brush.horizontalGradient(
-//                                colors = listOf(RadicalRed, BonusLevel)
-//                            )
-//                        )
-//                        .weight(1f),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                    verticalArrangement = Arrangement.Center
-//                ) {
-//                    Text(
-//                        modifier = Modifier.padding(12.dp),
-//                        text = stringResource(id = R.string.expense),
-//                        color = White,
-//                        style = MaterialTheme.typography.h5,
-//                        textAlign = TextAlign.Center
-//                    )
-//                }
-//
-//                Spacer(modifier = Modifier.width(20.dp))
-//
-//                Column(
-//                    modifier = Modifier
-//                        .clickable {
-//                            scope.launch {
-//                                hideBottomSheet.invoke(false)
-//                                spendingType = SpendType.Income
-//                                // sheetState.show()
-//                                router.goToAddExpenseScreen(SpendType.Income.name)
-//                            }
-//                        }
-//                        .clip(RoundedCornerShape(8.dp))
-//                        .background(
-//                            brush = Brush.horizontalGradient(
-//                                colors = listOf(InvasiveIndigo, MediumSpringGreen)
-//                            )
-//                        )
-//                        .weight(1f),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                    verticalArrangement = Arrangement.Center
-//                ) {
-//                    Text(
-//                        modifier = Modifier.padding(12.dp),
-//                        text = stringResource(id = R.string.income),
-//                        color = White,
-//                        style = MaterialTheme.typography.h5,
-//                        textAlign = TextAlign.Center
-//                    )
-//                }
-//            }
+                    .clickable {
+                        router.goToAddExpenseScreen(SpendType.Expense.name)
+                    }
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(RadicalRed, BonusLevel)
+                        )
+                    )
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = stringResource(id = R.string.expense),
+                    color = White,
+                    style = MaterialTheme.typography.h5,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Spacer(modifier = Modifier.width(20.dp))
+
+            Column(
+                modifier = Modifier
+                    .clickable {
+                        router.goToAddExpenseScreen(SpendType.Income.name)
+                    }
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(InvasiveIndigo, MediumSpringGreen)
+                        )
+                    )
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = stringResource(id = R.string.income),
+                    color = White,
+                    style = MaterialTheme.typography.h5,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
+
 
 fun getRecentExpense(dailyExpense: Expense?): List<ExpenseDetail>? {
     return dailyExpense?.let { latestExpense ->

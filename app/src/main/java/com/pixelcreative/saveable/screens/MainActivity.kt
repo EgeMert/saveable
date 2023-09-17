@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val route = navBackStackEntry?.destination?.route ?: Screens.SplashScreen.route
             val router: Router = remember { RouterImplementation(navController, route) }
-            var canShowBottomSheet by rememberSaveable { mutableStateOf(false) }
 
             SaveableTheme {
                 Surface(
@@ -59,17 +58,14 @@ class MainActivity : ComponentActivity() {
 
                         if (route != Screens.SplashScreen.route) {
                             BottomNavigationBar(
-                                navController = navController,
-                                bottomBarState = canShowBottomSheet
+                                navController = navController
                             )
                         }
                     }, content = {
                         SaveableNavGraph(
                             navController = navController,
-                            router = router,
-                            hideBottomSheet = {
-                                canShowBottomSheet = it
-                            })
+                            router = router
+                        )
                     })
                 }
             }
