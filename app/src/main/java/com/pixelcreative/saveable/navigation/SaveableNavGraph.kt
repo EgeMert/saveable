@@ -8,8 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.pixelcreative.saveable.screens.chart.ChartScreen
 import com.pixelcreative.saveable.screens.addexpense.AddExpenseScreen
+import com.pixelcreative.saveable.screens.chart.ChartScreen
 import com.pixelcreative.saveable.screens.detail.DetailScreen
 import com.pixelcreative.saveable.screens.expenses.ExpensesScreen
 import com.pixelcreative.saveable.screens.profile.ProfileScreen
@@ -20,68 +20,64 @@ fun SaveableNavGraph(
     navController: NavHostController,
     router: Router,
     startDestination: String = Screens.SplashScreen.route,
-    hideBottomSheet:(Boolean)->Unit = {},
+    hideBottomSheet: (Boolean) -> Unit = {},
     navGraphBuilder: NavGraphBuilder.() -> Unit = {},
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination,
-//        enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start) },
-//        popExitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start) }
+        startDestination = startDestination
     ) {
         navGraphBuilder.invoke(this)
         mainNavigation(router, hideBottomSheet)
     }
 }
+
 @OptIn(ExperimentalMaterialApi::class)
 private fun NavGraphBuilder.mainNavigation(
     router: Router,
-    hideBottomSheet:(Boolean)->Unit = {},
-){
+    hideBottomSheet: (Boolean) -> Unit = {},
+) {
     composable(
         route = Screens.SplashScreen.route
-    ){
-       SplashScreen(router = router)
+    ) {
+        SplashScreen(router = router)
     }
     composable(
         route = Screens.Home.route,
 
         ) {
-       // HomeScreen(router = router)
     }
     composable(
         route = Screens.MessageScreen.route,
         arguments = listOf(navArgument("message") {
             type = NavType.StringType
             defaultValue = ""
-            nullable  = true
+            nullable = true
         })
-    ) { navBackStackEntry ->
-        val message = navBackStackEntry.arguments?.getString("message") ?: ""
-       // MessageScreen(router = router, message = message)
+    ) {
     }
 
     composable(
         route = Screens.ExpenseScreen.route,
-    ){
-        ExpensesScreen(router = router ,  hideBottomSheet)
+    ) {
+        ExpensesScreen(router = router, hideBottomSheet)
     }
 
     composable(
         route = Screens.DetailScreen.route,
-    ){
-        DetailScreen(router = router )
+    ) {
+        DetailScreen(router = router)
     }
 
     composable(
         route = Screens.ChartScreen.route,
-    ){
-        ChartScreen(router = router )
+    ) {
+        ChartScreen(router = router)
     }
     composable(
         route = Screens.ProfileScreen.route,
-    ){
-        ProfileScreen(router = router )
+    ) {
+        ProfileScreen(router = router)
     }
 
     composable(
@@ -89,11 +85,10 @@ private fun NavGraphBuilder.mainNavigation(
         arguments = listOf(navArgument("spendType") {
             type = NavType.StringType
             defaultValue = ""
-            nullable  = true
+            nullable = true
         })
-    ){navBackStackEntry ->
+    ) { navBackStackEntry ->
         val type = navBackStackEntry.arguments?.getString("spendType").orEmpty()
-        AddExpenseScreen(router = router , spendType =type )
+        AddExpenseScreen(router = router, spendType = type)
     }
 }
-

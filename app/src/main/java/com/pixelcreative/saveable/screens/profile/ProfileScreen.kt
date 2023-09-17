@@ -78,7 +78,7 @@ fun ProfileScreen(router: Router) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             ProfileLabels("Rate Us", Icons.Default.Favorite) {
-                profileViewModel.showDialog(activity)
+                //profileViewModel.showDialog(activity)
             }
         }
     }

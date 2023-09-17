@@ -1,7 +1,6 @@
 package com.pixelcreative.saveable.screens.addexpense
 
 import android.util.Log
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -41,7 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -271,16 +268,6 @@ fun AddExpenseScreen(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Divider(Modifier.fillMaxWidth(), color = White)
-//            Text(
-//                text = "Explanation",
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//
-//                    .padding(vertical = 10.dp),
-//                textAlign = TextAlign.Center,
-//                style = MaterialTheme.typography.body1,
-//                color = White
-//            )
             Spacer(modifier = Modifier.height(10.dp))
         }
         Spacer(modifier = Modifier
@@ -509,139 +496,3 @@ private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy")
     return formatter.format(Date(millis))
 }
-//Column(
-//modifier = Modifier
-//.fillMaxSize()
-//.background(Black)
-//) {
-//    Text(
-//        modifier = Modifier
-//            .padding(
-//                top = 24.dp,
-//                start = 16.dp,
-//                end = 16.dp
-//            ),
-//        text = "Harcama girelim",
-//        color = White,
-//        style = MaterialTheme.typography.h2
-//    )
-//
-//    Column(
-//        modifier = Modifier
-//            .padding(16.dp)
-//            .fillMaxWidth(),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//
-//        TextField(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(8.dp),
-//            value = userInput,
-//            onValueChange = {
-//                userInput = it
-//            },
-//            placeholder = {
-//                Text(text = "Tutar buraya")
-//            },
-//            colors = TextFieldDefaults.textFieldColors(
-//                backgroundColor = Black,
-//                focusedIndicatorColor = Zomp,
-//                unfocusedIndicatorColor = Zomp,
-//                cursorColor = Zomp,
-//                textColor = Zomp,
-//                placeholderColor = Zomp
-//            ),
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-//        )
-//
-//        AutoComplete(
-//            categories = getAllCategories(),
-//            onCategorySelected = { category ->
-//                selectedCategory = category
-//            }
-//        )
-//
-//        Button(
-//            onClick = {
-//                dailyExpense?.let { expense ->
-//                    if (expense.date != getLocalDateAsString()) {
-//                        expensesScreenViewModel.addDailyExpense(
-//                            expenseAmount = userInput.toDouble(),
-//                            selectedCategory = selectedCategory,
-//                            incomeAmount = 0.0
-//                        )
-//                    } else {
-//                        expensesScreenViewModel.updateExpenseList(
-//                            expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
-//                                ExpenseDetail(
-//                                    price = userInput.toDouble(),
-//                                    category = selectedCategory,
-//                                    isIncome = false
-//                                )
-//                            ),
-//                            dailyTotalExpense =
-//                            dailyExpense.dailyTotalExpense.plus(userInput.toDouble())
-//                                .doubleOrZero(),
-//                            dailyTotalIncome = dailyExpense.dailyTotalIncome
-//                        )
-//                    }
-//                } ?: run {
-//                    expensesScreenViewModel.addDailyExpense(
-//                        expenseAmount = userInput.toDouble(),
-//                        selectedCategory = selectedCategory,
-//                        incomeAmount = 0.0
-//                    )
-//                }
-//            },
-//        ) {
-//            Text(
-//                text = "Expense",
-//                color = White,
-//                style = MaterialTheme.typography.h1
-//            )
-//        }
-//        Spacer(modifier = Modifier.height(16.dp))
-//        Button(
-//            onClick = {
-//                dailyExpense?.let { expense ->
-//                    if (expense.date != getLocalDateAsString()) {
-//                        expensesScreenViewModel.addDailyExpense(
-//                            incomeAmount = userInput.toDouble(),
-//                            selectedCategory = selectedCategory,
-//                            expenseAmount = 0.0
-//                        )
-//                    } else {
-//                        expensesScreenViewModel.updateExpenseList(
-//                            expenseDetail = expense.expenseDetailList?.expenseDetail?.plus(
-//                                ExpenseDetail(
-//                                    price = userInput.toDouble(),
-//                                    category = selectedCategory,
-//                                    isIncome = true
-//                                )
-//                            ),
-//                            dailyTotalExpense = dailyExpense.dailyTotalExpense,
-//                            dailyTotalIncome =
-//                            dailyExpense.dailyTotalIncome.plus(userInput.toDouble())
-//                                .doubleOrZero()
-//                        )
-//                    }
-//                } ?: run {
-//                    expensesScreenViewModel.addDailyExpense(
-//                        incomeAmount = userInput.toDouble(),
-//                        selectedCategory = selectedCategory,
-//                        expenseAmount = 0.0
-//                    )
-//                }
-//
-//            },
-//        ) {
-//            Text(
-//                text = "Income",
-//                color = White,
-//                style = MaterialTheme.typography.h1
-//            )
-//        }
-//    }
-//}

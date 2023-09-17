@@ -1,10 +1,12 @@
 package com.pixelcreative.saveable.screens.addexpense
 
 import androidx.compose.ui.graphics.Color
-import com.pixelcreative.saveable.ui.theme.*
+import com.pixelcreative.saveable.ui.theme.ButtonBlue
+import com.pixelcreative.saveable.ui.theme.ButtonPink
+import com.pixelcreative.saveable.ui.theme.ButtonYellow
 
 sealed class ActionType(val symbol: String, val buttonColor: Color) {
-data class Number(val number: Int) : ActionType(number.toString(), ButtonBlue)
+    data class Number(val number: Int) : ActionType(number.toString(), ButtonBlue)
     data class Operator(val operation: Operators) : ActionType(operation.symbol, ButtonPink)
 
     object Calculate : ActionType("=", ButtonYellow)
@@ -12,7 +14,7 @@ data class Number(val number: Int) : ActionType(number.toString(), ButtonBlue)
     object Clear : ActionType("AC", ButtonPink)
     object Calendar : ActionType("\uD83D\uDCC5", ButtonPink)
     object Decimal : ActionType(".", ButtonBlue)
-    object Percentage: ActionType("%", ButtonPink)
+    object Percentage : ActionType("%", ButtonPink)
 }
 
 sealed class Operators(val symbol: String) {

@@ -16,17 +16,17 @@ fun Int?.intOrZero(): Int {
     return this ?: 0
 }
 
-fun getLocalDateAsString(currentDate:LocalDate = LocalDate.now()): String {
+fun getLocalDateAsString(currentDate: LocalDate = LocalDate.now()): String {
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     return currentDate.format(dateFormatter)
 }
 
-fun getMonthAndYearAsString(currentDate:LocalDate = LocalDate.now()): String {
+fun getMonthAndYearAsString(currentDate: LocalDate = LocalDate.now()): String {
     val dateFormatter = DateTimeFormatter.ofPattern("MM-yyyy")
     return currentDate.format(dateFormatter)
 }
 
-fun getYearAsString(currentDate:LocalDate = LocalDate.now()): String {
+fun getYearAsString(currentDate: LocalDate = LocalDate.now()): String {
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy")
     return currentDate.format(dateFormatter)
 }
@@ -129,10 +129,12 @@ fun calculateMonthlyTotalExpenses(expenseList: List<Expense>?): List<TotalExpens
     val monthlyTotalMap = mutableMapOf<Int, Double>()
 
     for (expense in expenseList) {
-        val month = LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).monthValue
+        val month =
+            LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).monthValue
 
         val currentTotal = monthlyTotalMap.getOrDefault(month, 0.0)
-        val expenseDetailTotal = expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
+        val expenseDetailTotal =
+            expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
 
         monthlyTotalMap[month] = currentTotal + expenseDetailTotal
     }
@@ -150,10 +152,12 @@ fun calculateDailyTotalExpenses(expenseList: List<Expense>?): List<TotalExpenseW
     val dailyTotalMap = mutableMapOf<Int, Double>()
 
     for (expense in expenseList) {
-        val day = LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).dayOfMonth
+        val day =
+            LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).dayOfMonth
 
         val currentTotal = dailyTotalMap.getOrDefault(day, 0.0)
-        val expenseDetailTotal = expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
+        val expenseDetailTotal =
+            expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
 
         dailyTotalMap[day] = currentTotal + expenseDetailTotal
     }

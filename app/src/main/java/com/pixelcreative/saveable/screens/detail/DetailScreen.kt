@@ -16,9 +16,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.pixelcreative.saveable.components.DailyExpensesAnalysis
-import com.pixelcreative.saveable.components.MonthlyExpenseAnalysis
-import com.pixelcreative.saveable.components.YearlyExpenseAnalysis
+import com.pixelcreative.saveable.components.analysis.DailyExpensesAnalysis
+import com.pixelcreative.saveable.components.analysis.MonthlyExpenseAnalysis
+import com.pixelcreative.saveable.components.analysis.YearlyExpenseAnalysis
 import com.pixelcreative.saveable.navigation.Router
 import com.pixelcreative.saveable.ui.theme.BlackHtun
 import com.pixelcreative.saveable.ui.theme.BluishPurple

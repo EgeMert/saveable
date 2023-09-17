@@ -38,7 +38,7 @@ fun MpBarChart(
                 )
             }
 
-            val dataSet = BarDataSet(entries, "Total Expense").apply {
+            val dataSet = BarDataSet(entries, TOTAL_EXPENSE).apply {
                 color = BondyBlue.toArgb()
             }
 
@@ -48,10 +48,11 @@ fun MpBarChart(
 
             barChart.apply {
                 xAxis.setValueFormatter(IndexAxisValueFormatter(expenseDetails.map { it.value }))
+                axisLeft.axisMinimum = 0.0f
+                axisRight.isEnabled = false
                 description.isEnabled = false
                 xAxis.textColor = White.toArgb()
                 axisLeft.textColor = White.toArgb()
-                axisRight.textColor = White.toArgb()
                 legend.textColor = White.toArgb()
                 data = barData
                 invalidate()
@@ -59,3 +60,5 @@ fun MpBarChart(
         }
     )
 }
+
+const val TOTAL_EXPENSE = "Toplam harcama"

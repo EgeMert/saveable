@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Saveable</string>
     <string name="main_title">Saveable</string>
+    <string name="total_balance_title">Toplam bakiye</string>
+    <string name="total_balance_info">%1$s TL</string>
+    <string name="daily_expense_count_info">Günlük giderler (%1$d)</string>
+    <string name="monthly_categories_count_info">Aylık harcama kategorileri (%1$d)</string>
+    <string name="yearly_categories_count_info">Yıllık harcama kategorileri (%1$d)</string>
+    <string name="daily_spending_limit_title">Günlük harcama limiti</string>
+    <string name="remaining_limit_title">Kalan limit</string>
+    <string name="expense">Harcama</string>
+    <string name="income">Gelir</string>
+    <string name="expense_detail_price_text">%1$s78%2$s TL</string>
+    <string name="no_expense_text">Hiç harcamanız yok, hadi başlayalım👻</string>
+    <string name="total_expense_text">Toplam harcama</string>
+    <string name="recent_expenses_text">Son harcamalar</string>
+    <string name="see_all_text">Tümünü gör</string>
+    <string name="this_month_summary">Aylık özet</string>
 </resources>

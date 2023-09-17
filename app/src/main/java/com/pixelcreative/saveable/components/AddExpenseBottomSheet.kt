@@ -49,10 +49,10 @@ import com.pixelcreative.saveable.ui.theme.ZimaBlue
 @Composable
 fun AddExpenseBottomSheet(
     spendType: SpendType,
-    addDate:() -> Unit = {},
+    addDate: () -> Unit = {},
     addExpenseOrIncome: (String, String, String) -> Unit,
 
-) {
+    ) {
     var selectedBillType by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("") }
     var dropDownType by remember { mutableStateOf(DropDownType.None) }
@@ -419,5 +419,5 @@ enum class SpendType {
 @Preview
 @Composable
 fun AddExpenseBottomSheet_Preview() {
-    AddExpenseBottomSheet( SpendType.None, addDate = {}){s, s2, s3 ->  }
+    AddExpenseBottomSheet(SpendType.None, addDate = {}) { s, s2, s3 -> }
 }

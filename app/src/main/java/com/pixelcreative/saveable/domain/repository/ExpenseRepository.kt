@@ -8,7 +8,6 @@ typealias Expenses = List<Expense>
 typealias ExpenseDetails = List<ExpenseDetail>
 
 interface ExpenseRepository {
-    //suspend fun getExpensesFromRoom(): Expenses
 
     suspend fun getExpenseFromRoom(id: Long): Expense
 

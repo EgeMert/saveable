@@ -52,5 +52,4 @@ fun BottomNavigationBar(navController: NavHostController, bottomBarState: Boolea
             }
         }
     }
-
 }

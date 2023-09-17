@@ -15,9 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pixelcreative.saveable.R
 import com.pixelcreative.saveable.core.orNone
 import com.pixelcreative.saveable.ui.theme.InvasiveIndigo
 import com.pixelcreative.saveable.ui.theme.MediumSpringGreen
@@ -30,7 +33,7 @@ fun DailyLimitCard_Preview() {
     DailyLimitCard(
         modifier = Modifier.defaultMinSize(minWidth = 160.dp, minHeight = 70.dp),
         colors = listOf(InvasiveIndigo, MediumSpringGreen),
-        title = "Daily spending limit:",
+        title = stringResource(id = R.string.daily_spending_limit_title),
         limit = "$500"
     )
 }
@@ -41,7 +44,7 @@ fun DailyLimitCardNull_Preview() {
     DailyLimitCard(
         modifier = Modifier.defaultMinSize(minWidth = 160.dp, minHeight = 70.dp),
         colors = listOf(InvasiveIndigo, MediumSpringGreen),
-        title = "Daily spending limit:",
+        title = stringResource(id = R.string.daily_spending_limit_title),
     )
 }
 
@@ -56,7 +59,7 @@ fun DailyLimitCard(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(brush = Brush.horizontalGradient(colors = colors))
-            .padding(12.dp),
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -65,7 +68,9 @@ fun DailyLimitCard(
             text = title.orEmpty(),
             color = Pinball,
             style = MaterialTheme.typography.subtitle1,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
         )
         Text(
             modifier = Modifier
@@ -74,7 +79,9 @@ fun DailyLimitCard(
             text = limit.orNone(),
             color = White,
             style = MaterialTheme.typography.h5,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
         )
     }
 }

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.pixelcreative.saveable.core.Constants.Companion.EMPTY_STRING
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScaffold(
     modifier: Modifier,
@@ -123,5 +121,3 @@ fun BaseScaffold(
 
     }
 }
-
-

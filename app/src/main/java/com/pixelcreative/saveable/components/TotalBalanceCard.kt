@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pixelcreative.saveable.R
@@ -65,7 +66,7 @@ fun TotalBalanceCard(
         ) {
 
             Text(
-                text = "Total Balance",
+                text = stringResource(id = R.string.total_balance_title),
                 color = Pinball,
                 style = MaterialTheme.typography.h5
             )
@@ -79,7 +80,7 @@ fun TotalBalanceCard(
 
             Text(
                 modifier = Modifier.padding(top = 8.dp),
-                text = "This month",
+                text = stringResource(id = R.string.this_month_summary),
                 color = Pinball,
                 style = MaterialTheme.typography.h5
             )

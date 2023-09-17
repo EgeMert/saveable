@@ -1,8 +1,5 @@
 package com.pixelcreative.saveable.screens.expenses
 
-import android.app.DatePickerDialog
-import android.util.Log
-import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
@@ -44,10 +40,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pixelcreative.saveable.R
 import com.pixelcreative.saveable.components.AddExpenseBottomSheet
 import com.pixelcreative.saveable.components.DailyLimitCard
 import com.pixelcreative.saveable.components.SpendType
@@ -93,12 +90,15 @@ fun ExpensesScreen(
     val monthlyExpense = expensesScreenViewModel.monthlyExpense.collectAsState().value
 
     val dailyLimit by rememberSaveable { mutableDoubleStateOf(500.00) }
-    var canShowDatePicker by remember{ mutableStateOf(false)}
+    var canShowDatePicker by remember { mutableStateOf(false) }
     var date by remember {
         mutableStateOf(EMPTY_STRING)
     }
     val sheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,skipHalfExpanded = true)
+        rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            skipHalfExpanded = true
+        )
     val scope = rememberCoroutineScope()
     expensesScreenViewModel.getDailyExpense(getLocalDateAsString())
 
@@ -113,7 +113,7 @@ fun ExpensesScreen(
         modifier = Modifier.navigationBarsPadding(),
         scrimColor = Color.Black.copy(alpha = 0.3f),
         sheetContent = {
-            if (canShowDatePicker){
+            if (canShowDatePicker) {
                 val datePickerState = rememberDatePickerState(selectableDates = object :
                     SelectableDates {
                     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
@@ -123,19 +123,21 @@ fun ExpensesScreen(
 
                 val selectedDate = datePickerState.selectedDateMillis?.let {
                     convertMillisToDate(it)
-                } ?: ""
+                } ?: EMPTY_STRING
                 DatePickerDialog(onDismissRequest = { canShowDatePicker = false }, confirmButton = {
-                    date =selectedDate
-                    Log.d("date","Selected Date--> $date")
+                    date = selectedDate
                 }) {
                     DatePicker(
                         state = datePickerState
                     )
                 }
             }
-            AddExpenseBottomSheet(spendType = spendingType, addDate = {
-                canShowDatePicker = true
-            }){ userInput, selectedCategory, selectedBillType->
+            AddExpenseBottomSheet(
+                spendType = spendingType,
+                addDate = {
+                    canShowDatePicker = true
+                }
+            ) { userInput, selectedCategory, selectedBillType ->
                 if (spendingType == SpendType.Expense) {
                     dailyExpense?.let { expense ->
                         if (expense.date != getLocalDateAsString()) {
@@ -166,7 +168,7 @@ fun ExpensesScreen(
                             incomeAmount = 0.0
                         )
                     }
-                }else{
+                } else {
                     dailyExpense?.let { expense ->
                         if (expense.date != getLocalDateAsString()) {
                             expensesScreenViewModel.addDailyExpense(
@@ -221,11 +223,20 @@ fun ExpensesScreen(
                             .fillMaxHeight()
                             .weight(1.6f),
                         colors = listOf(ZimaBlue, BluishPurple),
-                        totalBalance = getMonthlyIncomeTotal(monthlyExpense).minus(
-                            getMonthlyExpenseTotal(monthlyExpense)
-                        ).formatDoubleToString(),
-                        monthlyIncome = getMonthlyIncomeTotal(monthlyExpense).formatDoubleToString(),
-                        monthlyExpense = getMonthlyExpenseTotal(monthlyExpense).formatDoubleToString()
+                        totalBalance = stringResource(
+                            id = R.string.total_balance_info,
+                            getMonthlyIncomeTotal(monthlyExpense).minus(
+                                getMonthlyExpenseTotal(monthlyExpense)
+                            ).formatDoubleToString()
+                        ),
+                        monthlyIncome = stringResource(
+                            id = R.string.total_balance_info,
+                            getMonthlyIncomeTotal(monthlyExpense).formatDoubleToString()
+                        ),
+                        monthlyExpense = stringResource(
+                            id = R.string.total_balance_info,
+                            getMonthlyExpenseTotal(monthlyExpense).formatDoubleToString()
+                        )
                     )
 
                     Column(
@@ -239,8 +250,11 @@ fun ExpensesScreen(
                                 .weight(1f)
                                 .fillMaxWidth(),
                             colors = listOf(InvasiveIndigo, MediumSpringGreen),
-                            title = "Daily limit:",
-                            limit = "$ " + dailyLimit.formatDoubleToString()
+                            title = stringResource(id = R.string.daily_spending_limit_title),
+                            limit = stringResource(
+                                id = R.string.total_balance_info,
+                                dailyLimit.formatDoubleToString()
+                            )
                         )
 
                         DailyLimitCard(
@@ -249,12 +263,15 @@ fun ExpensesScreen(
                                 .fillMaxWidth()
                                 .padding(top = 12.dp),
                             colors = listOf(RadicalRed, BonusLevel),
-                            title = "Remaining limit:",
-                            limit = "$ " + dailyLimit.plus(
-                                (dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
-                                    dailyExpense?.dailyTotalExpense.doubleOrZero()
-                                ))
-                            ).formatDoubleToString()
+                            title = stringResource(id = R.string.remaining_limit_title),
+                            limit = stringResource(
+                                id = R.string.total_balance_info,
+                                dailyLimit.plus(
+                                    (dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
+                                        dailyExpense?.dailyTotalExpense.doubleOrZero()
+                                    ))
+                                ).formatDoubleToString()
+                            )
                         )
                     }
                 }
@@ -282,7 +299,7 @@ fun ExpensesScreen(
                             scope.launch {
                                 hideBottomSheet.invoke(false)
                                 spendingType = SpendType.Expense
-                               // sheetState.show()
+                                // sheetState.show()
                                 router.goToAddExpenseScreen(SpendType.Expense.name)
 
                             }
@@ -299,7 +316,7 @@ fun ExpensesScreen(
                 ) {
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = "Expense",
+                        text = stringResource(id = R.string.expense),
                         color = White,
                         style = MaterialTheme.typography.h5,
                         textAlign = TextAlign.Center
@@ -314,7 +331,7 @@ fun ExpensesScreen(
                             scope.launch {
                                 hideBottomSheet.invoke(false)
                                 spendingType = SpendType.Income
-                               // sheetState.show()
+                                // sheetState.show()
                                 router.goToAddExpenseScreen(SpendType.Income.name)
                             }
                         }
@@ -330,7 +347,7 @@ fun ExpensesScreen(
                 ) {
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = "Income",
+                        text = stringResource(id = R.string.income),
                         color = White,
                         style = MaterialTheme.typography.h5,
                         textAlign = TextAlign.Center
@@ -348,6 +365,7 @@ fun getRecentExpense(dailyExpense: Expense?): List<ExpenseDetail>? {
         }?.reversed()
     }
 }
+
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy")
     return formatter.format(Date(millis))

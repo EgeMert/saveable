@@ -13,6 +13,7 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.pixelcreative.saveable.core.Constants
 import com.pixelcreative.saveable.ui.theme.BlackHtun
 import com.pixelcreative.saveable.ui.theme.BondyBlue
 import com.pixelcreative.saveable.ui.theme.White
@@ -40,7 +41,7 @@ fun MpPieChart(
                 )
             }
 
-            val dataSet = PieDataSet(entries, "Total Expense").apply {
+            val dataSet = PieDataSet(entries, Constants.EMPTY_STRING).apply {
                 color = BondyBlue.toArgb()
             }
 
@@ -69,10 +70,10 @@ fun MpPieChart(
 }
 
 fun getRandomColor(): Int {
-    val alpha = 255 // Tam opaklık
-    val red = (0..255).random() // 0 ile 255 arasında rastgele bir kırmızı değeri
-    val green = (0..255).random() // 0 ile 255 arasında rastgele bir yeşil değeri
-    val blue = (0..255).random() // 0 ile 255 arasında rastgele bir mavi değeri
+    val alpha = 255
+    val red = (0..255).random()
+    val green = (0..255).random()
+    val blue = (0..255).random()
 
     return Color.argb(alpha, red, green, blue)
 }

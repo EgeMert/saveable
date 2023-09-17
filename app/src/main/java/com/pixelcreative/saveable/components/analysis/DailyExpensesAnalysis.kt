@@ -1,4 +1,4 @@
-package com.pixelcreative.saveable.components
+package com.pixelcreative.saveable.components.analysis
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -11,47 +11,51 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pixelcreative.saveable.R
+import com.pixelcreative.saveable.components.ExpenseDetailListView
+import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.formatDoubleToString
-import com.pixelcreative.saveable.core.getExpenseSummaryByCategory
-import com.pixelcreative.saveable.core.getTotalPrice
-import com.pixelcreative.saveable.core.getYearAsString
+import com.pixelcreative.saveable.core.getLocalDateAsString
+import com.pixelcreative.saveable.core.intOrZero
 import com.pixelcreative.saveable.screens.expenses.ExpensesScreenViewModel
 import com.pixelcreative.saveable.ui.theme.BluishPurple
 import com.pixelcreative.saveable.ui.theme.Emerald
 import com.pixelcreative.saveable.ui.theme.Pinball
 
 @Composable
-fun YearlyExpenseAnalysis() {
+fun DailyExpensesAnalysis() {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-
-        val selectedYear by rememberSaveable { mutableStateOf(getYearAsString()) }
-
         val expensesScreenViewModel: ExpensesScreenViewModel = hiltViewModel()
 
-        expensesScreenViewModel.getYearlyExpense(selectedYear)
+        expensesScreenViewModel.getDailyExpense(getLocalDateAsString())
 
-        val yearlyExpense = expensesScreenViewModel.yearlyExpense.collectAsState().value
+        val dailyExpense = expensesScreenViewModel.dailyExpense.collectAsState().value
+
+        val totalBalance = dailyExpense?.dailyTotalIncome.doubleOrZero().minus(
+            dailyExpense?.dailyTotalExpense.doubleOrZero()
+        )
 
         Text(
             modifier = Modifier.padding(top = 20.dp),
-            text = "Total balance",
+            text = stringResource(id = R.string.total_balance_title),
             color = Pinball,
             style = MaterialTheme.typography.h5
         )
 
         Text(
             modifier = Modifier.padding(top = 12.dp),
-            text = "$ " + (getTotalPrice(yearlyExpense)).formatDoubleToString(),
-            color = if (getTotalPrice(yearlyExpense) > 0) {
+            text = stringResource(
+                id = R.string.total_balance_info,
+                totalBalance.formatDoubleToString()
+            ),
+            color = if (totalBalance > 0) {
                 Emerald
             } else {
                 Pinball
@@ -62,7 +66,10 @@ fun YearlyExpenseAnalysis() {
         Text(
             modifier = Modifier
                 .padding(top = 20.dp),
-            text = "Yearly Categories ( ${getExpenseSummaryByCategory(yearlyExpense).size.or(0)} Categories )",
+            text = stringResource(
+                id = R.string.daily_expense_count_info,
+                dailyExpense?.expenseDetailList?.expenseDetail?.size.intOrZero()
+            ),
             color = Pinball,
             style = MaterialTheme.typography.h6,
             overflow = TextOverflow.Ellipsis,
@@ -81,7 +88,9 @@ fun YearlyExpenseAnalysis() {
             modifier = Modifier
                 .navigationBarsPadding()
                 .padding(top = 12.dp),
-            expenseDetailList = getExpenseSummaryByCategory(yearlyExpense).reversed()
+            expenseDetailList = dailyExpense?.expenseDetailList?.expenseDetail?.reversed(),
+            emptyListModifier = Modifier
+                .padding(vertical = 8.dp)
         )
     }
 }

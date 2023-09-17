@@ -64,10 +64,10 @@ class ExpensesScreenViewModel @Inject constructor(
         expenseAmount: Double,
         selectedCategory: String,
         incomeAmount: Double,
-        inputDate:String?=EMPTY_STRING,
+        inputDate: String? = EMPTY_STRING,
     ) = viewModelScope.launch {
         val expense = Expense(
-            date =if (inputDate.isNullOrEmpty()) getLocalDateAsString() else inputDate,
+            date = if (inputDate.isNullOrEmpty()) getLocalDateAsString() else inputDate,
             expenseDetailList = ExpenseDetailList(
                 expenseDetail = listOf(
                     ExpenseDetail(

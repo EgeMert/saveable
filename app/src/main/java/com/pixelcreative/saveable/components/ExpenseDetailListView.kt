@@ -12,7 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pixelcreative.saveable.R
 import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.formatDoubleToString
 import com.pixelcreative.saveable.core.getImageFromLabel
@@ -24,11 +26,12 @@ import kotlin.math.abs
 @Composable
 fun ExpenseDetailListView(
     modifier: Modifier = Modifier,
-    expenseDetailList: List<ExpenseDetail>?
+    expenseDetailList: List<ExpenseDetail>?,
+    emptyListModifier: Modifier = Modifier
 ) {
-    expenseDetailList?.let { expenseDetail ->
+    if (expenseDetailList.isNullOrEmpty().not()) {
         Column(modifier = modifier) {
-            expenseDetail.forEach { detail ->
+            expenseDetailList?.forEach { detail ->
                 val sign = if (detail.isIncome == true) "+ " else ""
                 Row(
                     modifier = Modifier
@@ -55,7 +58,11 @@ fun ExpenseDetailListView(
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = "$sign$${abs(detail.price.doubleOrZero()).formatDoubleToString()}",
+                        text = stringResource(
+                            id = R.string.expense_detail_price_text,
+                            sign,
+                            abs(detail.price.doubleOrZero()).formatDoubleToString()
+                        ),
                         color = if (detail.isIncome == true) {
                             Emerald
                         } else {
@@ -66,11 +73,10 @@ fun ExpenseDetailListView(
                 }
             }
         }
-    } ?: run {
+    } else {
         Text(
-            modifier = Modifier
-                .padding(8.dp),
-            text = "Hiç harcamanız yok, hadi başlayalım \uD83D\uDC7B",
+            modifier = emptyListModifier,
+            text = stringResource(id = R.string.no_expense_text),
             color = White,
             style = MaterialTheme.typography.h3
         )

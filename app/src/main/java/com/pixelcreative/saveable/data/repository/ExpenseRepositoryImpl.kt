@@ -11,10 +11,6 @@ class ExpenseRepositoryImpl(
     private val expenseDao: ExpenseDao
 ) : ExpenseRepository {
 
-    /*    override suspend fun getExpensesFromRoom() = withContext(Dispatchers.IO) {
-            expenseDao.getExpenses()
-        }*/
-
     override suspend fun getExpenseFromRoom(id: Long) = withContext(Dispatchers.IO) {
         expenseDao.getExpense(id)
     }

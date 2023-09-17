@@ -7,7 +7,7 @@ import com.pixelcreative.saveable.data.ExpenseDbConverter
 import com.pixelcreative.saveable.data.dao.ExpenseDao
 import com.pixelcreative.saveable.domain.model.Expense
 
-@TypeConverters(value=[ExpenseDbConverter::class])
+@TypeConverters(value = [ExpenseDbConverter::class])
 @Database(
     entities = [Expense::class],
     version = 1,
