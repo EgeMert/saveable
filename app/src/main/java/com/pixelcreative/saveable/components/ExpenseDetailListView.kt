@@ -33,12 +33,7 @@ fun ExpenseDetailListView(
     emptyListModifier: Modifier = Modifier
 ) {
     if (expenseDetailList.isNullOrEmpty()) {
-        Text(
-            modifier = emptyListModifier,
-            text = stringResource(id = R.string.no_expense_text),
-            color = White,
-            style = MaterialTheme.typography.h3
-        )
+        EmptyDataComponent(modifier = emptyListModifier)
     } else {
         LazyColumn(modifier = modifier) {
             items(expenseDetailList) { detail ->

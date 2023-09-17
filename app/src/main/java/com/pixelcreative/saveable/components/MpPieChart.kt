@@ -1,13 +1,9 @@
 package com.pixelcreative.saveable.components
 
 import android.graphics.Color
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -20,13 +16,11 @@ import com.pixelcreative.saveable.ui.theme.White
 
 @Composable
 fun MpPieChart(
+    modifier: Modifier = Modifier,
     mappedExpense: Map<String, Double>
 ) {
     AndroidView(
-        modifier = Modifier
-            .height(360.dp)
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 12.dp),
+        modifier = modifier,
         factory = { context ->
             PieChart(context)
         },

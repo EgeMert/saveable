@@ -96,6 +96,7 @@ fun getEnumByLocalizedLabel(label: String, context: Context): CategoriesEnum? {
     }
     return null
 }
+
 fun getAllCategories(): List<CategoriesEnum> {
     return listOf(
         CategoriesEnum.CLOTHES,

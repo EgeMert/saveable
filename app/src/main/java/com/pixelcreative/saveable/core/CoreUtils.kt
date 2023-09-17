@@ -1,11 +1,11 @@
 package com.pixelcreative.saveable.core
 
+import androidx.compose.runtime.Composable
 import com.pixelcreative.saveable.domain.model.Expense
 import com.pixelcreative.saveable.domain.model.ExpenseDetail
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.math.abs
 
 
 fun Double?.doubleOrZero(): Double {
@@ -127,14 +127,14 @@ fun calculateMonthlyTotalExpenses(expenseList: List<Expense>?): List<TotalExpens
     }
 
     val monthlyTotalMap = mutableMapOf<Int, Double>()
-
     for (expense in expenseList) {
         val month =
             LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).monthValue
 
         val currentTotal = monthlyTotalMap.getOrDefault(month, 0.0)
         val expenseDetailTotal =
-            expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
+            expense.expenseDetailList?.expenseDetail?.filter { it.isIncome == false }
+                ?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
 
         monthlyTotalMap[month] = currentTotal + expenseDetailTotal
     }
@@ -157,7 +157,8 @@ fun calculateDailyTotalExpenses(expenseList: List<Expense>?): List<TotalExpenseW
 
         val currentTotal = dailyTotalMap.getOrDefault(day, 0.0)
         val expenseDetailTotal =
-            expense.expenseDetailList?.expenseDetail?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
+            expense.expenseDetailList?.expenseDetail?.filter { it.isIncome == false }
+                ?.sumByDouble { it.price.doubleOrZero() } ?: 0.0
 
         dailyTotalMap[day] = currentTotal + expenseDetailTotal
     }
@@ -167,8 +168,15 @@ fun calculateDailyTotalExpenses(expenseList: List<Expense>?): List<TotalExpenseW
     }
 }
 
+@Composable
 fun convertExpenseDetailsToMap(expenseDetails: List<ExpenseDetail>): Map<String, Double> {
-    return expenseDetails.mapNotNull { detail ->
-        detail.category?.let { category -> category to abs(detail.price.doubleOrZero()) }
+    return expenseDetails.filter { it.isIncome == false }.mapNotNull { detail ->
+        detail.isIncome
+        detail.category?.let { category -> getCategoryLabel(category) to detail.price.doubleOrZero() }
     }.toMap()
+}
+
+fun roundToDecimal(value: Float, decimalPlaces: Int): Float {
+    val multiplier = Math.pow(10.0, decimalPlaces.toDouble()).toFloat()
+    return Math.round(value * multiplier) / multiplier
 }

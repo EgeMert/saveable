@@ -86,13 +86,7 @@ fun SummaryCard(
             )
 
         } ?: run {
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 8.dp),
-                text = stringResource(id = R.string.no_expense_text),
-                color = White,
-                style = MaterialTheme.typography.h3
-            )
+            EmptyDataComponent(modifier = Modifier.padding(vertical = 8.dp))
         }
     }
 }
