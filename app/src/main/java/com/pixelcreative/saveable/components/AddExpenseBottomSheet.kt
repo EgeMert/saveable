@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.pixelcreative.saveable.core.CategoriesEnum
 import com.pixelcreative.saveable.core.Constants
 import com.pixelcreative.saveable.ui.theme.BluishPurple
 import com.pixelcreative.saveable.ui.theme.DarkPurple
@@ -59,7 +60,11 @@ fun AddExpenseBottomSheet(
     val selectedList = remember { mutableStateListOf<String>() }
     var showDialog by remember { mutableStateOf(false) }
     var selectedNumber by remember { mutableStateOf("0") }
+    val categoryList  = remember { mutableStateListOf<String>()}
 
+    CategoriesEnum.values().forEach {
+        categoryList.add(it.name)
+    }
     val screenHeight = LocalConfiguration.current.screenHeightDp * 0.62
     ConstraintLayout(
         modifier = Modifier
@@ -171,29 +176,7 @@ fun AddExpenseBottomSheet(
                         .clickable {
                             dropDownType = DropDownType.Categories
                             selectedList.removeAll { true }
-                            val billTypeList = listOf(
-                                "Shopping",
-                                "Clothes",
-                                "Credit Card",
-                                "Education",
-                                "Electric",
-                                "Electronic",
-                                "Entertainment",
-                                "Expense",
-                                "Food",
-                                "Furniture",
-                                "Health",
-                                "Income",
-                                "Kids",
-                                "Phone",
-                                "Shopping",
-                                "Rent",
-                                "Transport",
-                                "Wage",
-                                "Pet",
-                                "Water"
-                            )
-                            selectedList.addAll(billTypeList)
+                            selectedList.addAll(categoryList)
                             if (!showDialog) {
                                 showDialog = true
                             }
@@ -419,5 +402,5 @@ enum class SpendType {
 @Preview
 @Composable
 fun AddExpenseBottomSheet_Preview() {
-    AddExpenseBottomSheet(SpendType.None, addDate = {}) { s, s2, s3 -> }
+    AddExpenseBottomSheet( SpendType.None, addDate = {}){s, s2, s3 ->  }
 }

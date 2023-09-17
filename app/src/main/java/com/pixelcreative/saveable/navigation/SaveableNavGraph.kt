@@ -89,6 +89,6 @@ private fun NavGraphBuilder.mainNavigation(
         })
     ) { navBackStackEntry ->
         val type = navBackStackEntry.arguments?.getString("spendType").orEmpty()
-        AddExpenseScreen(router = router, spendType = type)
+        AddExpenseScreen(router = router)
     }
 }

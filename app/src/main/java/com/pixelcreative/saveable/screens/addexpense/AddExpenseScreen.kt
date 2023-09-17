@@ -1,6 +1,7 @@
 package com.pixelcreative.saveable.screens.addexpense
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -45,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +56,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.pixelcreative.saveable.components.DropDownMenu
 import com.pixelcreative.saveable.components.DropDownType
 import com.pixelcreative.saveable.components.SpendType
+import com.pixelcreative.saveable.core.CategoriesEnum
 import com.pixelcreative.saveable.core.Constants
 import com.pixelcreative.saveable.core.doubleOrZero
 import com.pixelcreative.saveable.core.getLocalDateAsString
@@ -72,8 +76,7 @@ import java.util.Date
 @Composable
 @ExperimentalMaterialApi
 fun AddExpenseScreen(
-    router: Router?,
-    spendType: String
+    router: Router?
 ) {
     val expensesScreenViewModel: ExpensesScreenViewModel = hiltViewModel()
 
@@ -89,13 +92,19 @@ fun AddExpenseScreen(
     var date by remember {
         mutableStateOf(getLocalDateAsString())
     }
-    val screenHeight = LocalConfiguration.current.screenHeightDp / 2.5
+    var spendingType by remember { mutableStateOf(SpendType.Income) }
+    val categoryList = remember { mutableStateListOf<String>() }
+
+    CategoriesEnum.values().forEach {
+        categoryList.add(it.name)
+    }
+    val context = LocalContext.current
     ConstraintLayout(
         modifier = Modifier
             .navigationBarsPadding()
             .padding(bottom = 8.dp)
             .fillMaxWidth()
-            .wrapContentHeight()
+            .fillMaxHeight()
     ) {
         if (canShowDatePicker) {
             val datePickerState = rememberDatePickerState(selectableDates = object :
@@ -129,7 +138,7 @@ fun AddExpenseScreen(
                 )
             }
         }
-        val (spendTypeRow, userInputView, userClickArea, dayText, spacerView) = createRefs()
+        val (spendTypeRow, userInputView, userClickArea, dayText, spendTypeText) = createRefs()
         if (showDialog) {
             DropDownMenu(dropDownList = selectedList,
                 dropDownType = dropDownType,
@@ -155,12 +164,59 @@ fun AddExpenseScreen(
 
                 })
         }
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .constrainAs(spendTypeText) {
+                top.linkTo(parent.top)
+            }) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                BluishPurple,
+                                ZimaBlue,
+                            )
+                        )
+                    )
+                    .weight(1f)
+                    .clickable {
+                        spendingType = SpendType.Income
+                    }, contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Gelir", style = MaterialTheme.typography.body1,
+                    color = White,
+                    modifier = Modifier.padding(vertical = 12.dp)
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                BluishPurple,
+                                ZimaBlue,
+                            )
+                        )
+                    )
+                    .weight(1f) .clickable {
+                        spendingType = SpendType.Expense
+                    }, contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Gider", style = MaterialTheme.typography.body1,
+                    color = White,
+                    modifier = Modifier.padding(vertical = 12.dp)
+                )
+            }
+        }
         Row(
             Modifier
                 .fillMaxWidth()
                 .constrainAs(spendTypeRow) {
                     centerHorizontallyTo(parent)
-                    top.linkTo(parent.top)
+                    top.linkTo(spendTypeText.bottom)
                     bottom.linkTo(userInputView.top)
                 })
         {
@@ -182,29 +238,7 @@ fun AddExpenseScreen(
                         .clickable {
                             dropDownType = DropDownType.Categories
                             selectedList.removeAll { true }
-                            val billTypeList = listOf(
-                                "Shopping",
-                                "Clothes",
-                                "Credit Card",
-                                "Education",
-                                "Electric",
-                                "Electronic",
-                                "Entertainment",
-                                "Expense",
-                                "Food",
-                                "Furniture",
-                                "Health",
-                                "Income",
-                                "Kids",
-                                "Phone",
-                                "Shopping",
-                                "Rent",
-                                "Transport",
-                                "Wage",
-                                "Pet",
-                                "Water"
-                            )
-                            selectedList.addAll(billTypeList)
+                            selectedList.addAll(categoryList)
                             if (!showDialog) {
                                 showDialog = true
                             }
@@ -212,7 +246,7 @@ fun AddExpenseScreen(
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 10.dp),
+                            .padding(vertical = 18.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -231,7 +265,7 @@ fun AddExpenseScreen(
                     }
                     Text(
                         text = selectedCategory,
-                        modifier = Modifier.padding(bottom = 10.dp),
+                        modifier = Modifier.padding(bottom = 18.dp),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.body1,
                         color = White
@@ -248,16 +282,15 @@ fun AddExpenseScreen(
                     centerHorizontallyTo(parent)
                 }) {
             Text(
-                text = spendType,
+                text = spendingType.name,
                 modifier = Modifier
                     .fillMaxWidth()
-
-                    .padding(top = 10.dp),
+                    .padding(top = 18.dp),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1,
                 color = White
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(18.dp))
             Text(
                 text = selectedNumber,
                 modifier = Modifier
@@ -266,22 +299,17 @@ fun AddExpenseScreen(
                 style = MaterialTheme.typography.body1,
                 color = White
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(18.dp))
             Divider(Modifier.fillMaxWidth(), color = White)
-            Spacer(modifier = Modifier.height(10.dp))
         }
-        Spacer(modifier = Modifier
-            .height(screenHeight.dp)
-            .constrainAs(spacerView) {
-                top.linkTo(userInputView.bottom)
-            })
         Row(
             Modifier
                 .fillMaxWidth()
+                .height(280.dp)
                 .constrainAs(userClickArea) {
                     centerHorizontallyTo(parent)
-                    top.linkTo(spacerView.bottom)
-                    bottom.linkTo(dayText.top)
+                    bottom.linkTo(parent.bottom)
+                    top.linkTo(spendTypeRow.bottom)
                 })
         {
             val numberList = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "okay")
@@ -309,7 +337,11 @@ fun AddExpenseScreen(
                                     .padding(vertical = 23.dp, horizontal = 28.dp)
                                     .clickable {
                                         if (selectedNumber.isEmpty()) return@clickable
-                                        if (spendType == SpendType.Expense.name) {
+                                        if (selectedCategory.isEmpty()) {
+                                            Toast.makeText(context,"Kategori seçmeden harcama giremezsiniz!", Toast.LENGTH_SHORT).show()
+                                            return@clickable
+                                        }
+                                        if (spendingType == SpendType.Expense) {
                                             dailyExpense?.let { expense ->
                                                 if (expense.date != getLocalDateAsString()) {
                                                     expensesScreenViewModel.addDailyExpense(
@@ -378,6 +410,7 @@ fun AddExpenseScreen(
                                             }
                                         }
                                         selectedNumber = "0"
+                                        Toast.makeText(context,"Harcama kaydedildi!", Toast.LENGTH_SHORT).show()
 
                                     },
                                 tint = White
@@ -463,6 +496,8 @@ fun AddExpenseScreen(
         }
         Box(
             modifier = Modifier
+                .navigationBarsPadding()
+                .padding(bottom = 54.dp)
                 .fillMaxWidth()
                 .background(Color.Red)
                 .constrainAs(dayText) {
@@ -475,7 +510,7 @@ fun AddExpenseScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = 24.dp),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.subtitle2,
                 color = White
@@ -489,7 +524,8 @@ fun AddExpenseScreen(
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF000000)
 @Composable
 fun AddExpenseScreenPreview() {
-    AddExpenseScreen(null, "Income")
+    AddExpenseScreen(null)
+
 }
 
 private fun convertMillisToDate(millis: Long): String {

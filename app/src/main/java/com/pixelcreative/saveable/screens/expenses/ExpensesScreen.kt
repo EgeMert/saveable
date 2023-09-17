@@ -287,73 +287,73 @@ fun ExpensesScreen(
                     //Burda gidiyor fakat tekrar anasayfaya basınca anasayfaya dönmüyor sadece backpress yapınca dönüyor
                 }
             )
-
-            Row(
-                modifier = Modifier
-                    .weight(1.3f)
-                    .padding(horizontal = 16.dp, vertical = 20.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .clickable {
-                            scope.launch {
-                                hideBottomSheet.invoke(false)
-                                spendingType = SpendType.Expense
-                                // sheetState.show()
-                                router.goToAddExpenseScreen(SpendType.Expense.name)
-
-                            }
-                        }
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(RadicalRed, BonusLevel)
-                            )
-                        )
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        modifier = Modifier.padding(12.dp),
-                        text = stringResource(id = R.string.expense),
-                        color = White,
-                        style = MaterialTheme.typography.h5,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(20.dp))
-
-                Column(
-                    modifier = Modifier
-                        .clickable {
-                            scope.launch {
-                                hideBottomSheet.invoke(false)
-                                spendingType = SpendType.Income
-                                // sheetState.show()
-                                router.goToAddExpenseScreen(SpendType.Income.name)
-                            }
-                        }
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(InvasiveIndigo, MediumSpringGreen)
-                            )
-                        )
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        modifier = Modifier.padding(12.dp),
-                        text = stringResource(id = R.string.income),
-                        color = White,
-                        style = MaterialTheme.typography.h5,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
+//
+//            Row(
+//                modifier = Modifier
+//                    .weight(1.3f)
+//                    .padding(horizontal = 16.dp, vertical = 20.dp)
+//            ) {
+//                Column(
+//                    modifier = Modifier
+//                        .clickable {
+//                            scope.launch {
+//                                hideBottomSheet.invoke(false)
+//                                spendingType = SpendType.Expense
+//                                // sheetState.show()
+//                                router.goToAddExpenseScreen(SpendType.Expense.name)
+//
+//                            }
+//                        }
+//                        .clip(RoundedCornerShape(8.dp))
+//                        .background(
+//                            brush = Brush.horizontalGradient(
+//                                colors = listOf(RadicalRed, BonusLevel)
+//                            )
+//                        )
+//                        .weight(1f),
+//                    horizontalAlignment = Alignment.CenterHorizontally,
+//                    verticalArrangement = Arrangement.Center
+//                ) {
+//                    Text(
+//                        modifier = Modifier.padding(12.dp),
+//                        text = stringResource(id = R.string.expense),
+//                        color = White,
+//                        style = MaterialTheme.typography.h5,
+//                        textAlign = TextAlign.Center
+//                    )
+//                }
+//
+//                Spacer(modifier = Modifier.width(20.dp))
+//
+//                Column(
+//                    modifier = Modifier
+//                        .clickable {
+//                            scope.launch {
+//                                hideBottomSheet.invoke(false)
+//                                spendingType = SpendType.Income
+//                                // sheetState.show()
+//                                router.goToAddExpenseScreen(SpendType.Income.name)
+//                            }
+//                        }
+//                        .clip(RoundedCornerShape(8.dp))
+//                        .background(
+//                            brush = Brush.horizontalGradient(
+//                                colors = listOf(InvasiveIndigo, MediumSpringGreen)
+//                            )
+//                        )
+//                        .weight(1f),
+//                    horizontalAlignment = Alignment.CenterHorizontally,
+//                    verticalArrangement = Arrangement.Center
+//                ) {
+//                    Text(
+//                        modifier = Modifier.padding(12.dp),
+//                        text = stringResource(id = R.string.income),
+//                        color = White,
+//                        style = MaterialTheme.typography.h5,
+//                        textAlign = TextAlign.Center
+//                    )
+//                }
+//            }
         }
     }
 }
